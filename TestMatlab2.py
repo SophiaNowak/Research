@@ -19,12 +19,12 @@ for folder in folderList:
     # Get the correct address to the folder.
     dir = folder_dir + folder
     print(dir)
+    counter = 0
 
     # Loop for finding the files.
     # for time in range(0,102,1):
     for item in fileList:
         current_dir = dir + '/' + item + '_' + str(time) + '.mat'
-        counter = 0
         # print(current_dir)
         # print(time)
         # Check if the file exists, if it does append the data at that file to the data list.
@@ -36,7 +36,7 @@ for folder in folderList:
                 for i in range(1680):
                     data[i][j][counter] = rawData[item][i][j]
                     # print(data[i][j][counter])
-
+        counter = counter + 1
     # For each folder perform calculations.
     nix = data[::13] * data[::0]
     niy = data[::13] * data[::1]

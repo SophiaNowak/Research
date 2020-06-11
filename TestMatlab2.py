@@ -52,6 +52,10 @@ for folder in folderList:
     znormz = (data[13] * Fe0 - nix * Fe1 - niy * Fe2 - niz * Fe3) / neg
     znormo = znormz * neg / nig;
 
+    nabla = (data[3] ** 2 + data[4] ** 2 + data[5] ** 2) - (data[6] ** 2 + data[7] ** 2 + data[8] ** 2)
+    pi =  (data[6] * data[3] + data[7] * data[4] + data[8] * data[5]) ** 2
+    lambda_squared = -nabla + np.sqrt(nabla ** 2 + pi ** 2)
+
     # Plotting z normal z and z normal o
     fig = pcolor(znormz, cmap="bwr")
     title("znormz " + folder + '_' + str(time))
@@ -62,6 +66,14 @@ for folder in folderList:
 
     fig2 = pcolor(znormo, cmap="bwr")
     title("znormo " + folder + '_' + str(time))
+    colorbar()
+    # savefig('/media/sophianowak/My Passport/Python Graphs/' + item + '_' + str(time) + '.png')
+    # close()
+    show()
+
+    # Ploting lambda squared
+    fig3 = pcolor(lambda_squared, cmap = "bwr")
+    title(lambda_squared)
     colorbar()
     # savefig('/media/sophianowak/My Passport/Python Graphs/' + item + '_' + str(time) + '.png')
     # close()

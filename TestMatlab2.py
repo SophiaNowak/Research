@@ -19,14 +19,14 @@ for folder in folderList:
     print(dir)
     # Counter for taking care of what variable we are working with
     counter = 0
-    # Loop for finding the files.
 
+    # Loop for finding the files.
     # for time in range(0,102,1):
     for item in fileList:
         current_dir = dir + '/' + item + '_' + str(time) + '.mat'
         # print(current_dir)
         # print(time)
-        # Check if the file exists, if it does append the data at that file to the data list.
+        # Check if the file exists, if it does store the data at that file to to the data 3-D array.
         if os.path.isfile(current_dir):
             rawData = scipy.io.loadmat(current_dir)
             # print(type(rawData[item]))
@@ -73,7 +73,7 @@ for folder in folderList:
 
     # Ploting lambda squared
     fig3 = pcolor(lambda_squared, cmap = "bwr")
-    title(lambda_squared)
+    title("lambda_squared" + folder + '_' + str(time))
     colorbar()
     # savefig('/media/sophianowak/My Passport/Python Graphs/' + item + '_' + str(time) + '.png')
     # close()

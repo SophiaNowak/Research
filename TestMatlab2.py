@@ -13,7 +13,7 @@ time = 62
 for folder in folderList:
     # intitalize a 3-D array, to the size of the data stored in each file
     # x, y, number of var
-    data = np.zeros((1680, 3360, 13))
+    data = np.zeros((14, 1680, 3360))
 
 
     # Get the correct address to the folder.
@@ -32,9 +32,7 @@ for folder in folderList:
             rawData = scipy.io.loadmat(current_dir)
             # print(type(rawData[item]))
             # Store the data from mat lab
-            for j in range(3360):
-                for i in range(1680):
-                    data[i][j][counter] = rawData[item][i][j]
+            data[counter, :, :] = rawData[item]
                     # print(data[i][j][counter])
         counter = counter + 1
     # For each folder perform calculations.

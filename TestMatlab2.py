@@ -35,6 +35,7 @@ for folder in folderList:
         counter = counter + 1
 
     # For each folder perform calculations.  np.multiply(a, b)
+    # print((data[13]).shape)
     nix = data[13] * data[0]
     niy = data[13] * data[1]
     niz = data[13] * data[2]
@@ -52,28 +53,28 @@ for folder in folderList:
     znormz = (data[13] * Fe0 - nix * Fe1 - niy * Fe2 - niz * Fe3) / neg
     znormo = znormz * neg / nig;
 
-    nabla = (data[3] ** 2 + data[4] ** 2 + data[5] ** 2) - (data[6] ** 2 + data[7] ** 2 + data[8] ** 2)
+    nabla = .5 * ((data[3] ** 2 + data[4] ** 2 + data[5] ** 2) - (data[6] ** 2 + data[7] ** 2 + data[8] ** 2))
     pi =  (data[6] * data[3] + data[7] * data[4] + data[8] * data[5]) ** 2
     lambda_squared = -nabla + np.sqrt(nabla ** 2 + pi ** 2)
 
-    # Plotting z normal z and z normal o
-    fig = pcolor(znormz, cmap="bwr")
-    title("znormz " + folder + '_' + str(time))
-    colorbar()
-    # savefig('/media/sophianowak/My Passport/Python Graphs/' + item + '_' + str(time) + '.png')
-    # close()
-    show()
-
-    fig2 = pcolor(znormo, cmap="bwr")
-    title("znormo " + folder + '_' + str(time))
-    colorbar()
-    # savefig('/media/sophianowak/My Passport/Python Graphs/' + item + '_' + str(time) + '.png')
-    # close()
-    show()
+    # # Plotting z normal z and z normal o
+    # fig = pcolor(znormz, cmap="bwr")
+    # title("znormz " + folder + '_' + str(time))
+    # colorbar()
+    # # savefig('/media/sophianowak/My Passport/Python Graphs/' + item + '_' + str(time) + '.png')
+    # # close()
+    # show()
+    #
+    # fig2 = pcolor(znormo, cmap="bwr")
+    # title("znormo " + folder + '_' + str(time))
+    # colorbar()
+    # # savefig('/media/sophianowak/My Passport/Python Graphs/' + item + '_' + str(time) + '.png')
+    # # close()
+    # show()
 
     # Ploting lambda squared
     fig3 = pcolor(lambda_squared, cmap = "bwr")
-    title("lambda_squared" + folder + '_' + str(time))
+    title(r'$\lambda^2$' + folder + '_' + str(time))
     colorbar()
     # savefig('/media/sophianowak/My Passport/Python Graphs/' + item + '_' + str(time) + '.png')
     # close()

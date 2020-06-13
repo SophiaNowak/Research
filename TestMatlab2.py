@@ -75,11 +75,11 @@ class StoreData(object):
         pi =  (data[6] * data[3] + data[7] * data[4] + data[8] * data[5]) ** 2
         lambda_squared = -delta + np.sqrt(delta ** 2 + pi)
 
-        self.plot(znormz, folder, time)
-        self.plot(onormz, folder, time)
-        self.plot(znormo, folder, time)
-        self.plot(onormo, folder, time)
-        self.plot(lambda_squared, folder, time)
+        self.plot(znormz, folder, time, "znormz ")
+        self.plot(onormz, folder, time, "onormz ")
+        self.plot(znormo, folder, time, "znormo ")
+        self.plot(onormo, folder, time, "onormo ")
+        self.plot(lambda_squared, folder, time, r'$\lambda^2$ ')
 
     def contractT(self, data, nix, niy, niz):
         Sx = data[7] * data[5] - data[8] * data[4]
@@ -97,13 +97,13 @@ class StoreData(object):
         sqrtW = np.sqrt(T00 ** 2 - Sx ** 2 - Sy ** 2 - Sz ** 2)
         return T0, T1, T2, T3, sqrtW
 
-    def plot(self, toPlot, folder, time):
+    def plot(self, toPlot, folder, time, plot_data_str):
         fig = imshow(toPlot, cmap="bwr")
-        title( " " + folder + '_' + str(time))
+        title(plot_data_str + folder + '_' + str(time))
         colorbar()
-        savefig('/media/sophianowak/My Passport/Python Graphs/' + '_' + str(time) + '.png')
+        savefig('/media/sophianowak/My Passport/Python Graphs/' + plot_data_str + folder + '_' + str(time) + '.png')
         close()
-        #show()
+        # show()
 
 
     # # Ploting lambda squared

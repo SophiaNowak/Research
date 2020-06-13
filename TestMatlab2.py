@@ -4,15 +4,15 @@ import numpy as np
 from pylab import plot, xlabel, ylabel, show, title, imshow, colorbar, savefig, close, pcolor, gca, axis
 
 
-class StoreData(object):
-    def getData(self):
+class MakeDataPlots(object):
+    def get_data(self):
         # Change the file directory variable depending on where the data is currently stored.
         folder_dir = '/media/sophianowak/My Passport/AsymmetricScan400/'
-        fileList = ['uix', 'uiy', 'uiz', 'bx', 'by', 'bz', 'ex', 'ey', 'ez', 'jx', 'jy', 'jz', 'ne', 'ni']
-        folderList = ['d10-gf0']  # , 'd10.5-gf0', 'd11-gf0', 'd12-gf0', 'd74-gf4'
+        file_list = ['uix', 'uiy', 'uiz', 'bx', 'by', 'bz', 'ex', 'ey', 'ez', 'jx', 'jy', 'jz', 'ne', 'ni']
+        folder_list = ['d10-gf0']  # , 'd10.5-gf0', 'd11-gf0', 'd12-gf0', 'd74-gf4'
         time = 62
 
-        for folder in folderList:
+        for folder in folder_list:
             # initialize a 3-D array, to the size of the data stored in each file
             data = np.zeros((14, 1680, 3360))
 
@@ -24,14 +24,14 @@ class StoreData(object):
 
             # Loop for finding the files.
             # for time in range(0,102,1):
-            for item in fileList:
+            for item in file_list:
                 current_dir = dir + '/' + item + '_' + str(time) + '.mat'
                 # Check if the file exists, if it does store the data at that file to to the data 3-D array.
                 if os.path.isfile(current_dir):
-                    rawData = scipy.io.loadmat(current_dir)
+                    raw_data = scipy.io.loadmat(current_dir)
                     # print(type(rawData[item]))
                     # Store the data from mat lab
-                    data[counter, :, :] = rawData[item]
+                    data[counter, :, :] = raw_data[item]
                 counter = counter + 1
             self.calculations(data, folder, time)
 
@@ -97,8 +97,8 @@ class StoreData(object):
         sqrtW = np.sqrt(T00 ** 2 - Sx ** 2 - Sy ** 2 - Sz ** 2)
         return T0, T1, T2, T3, sqrtW
 
-    def plot(self, toPlot, folder, time, plot_data_str):
-        fig = imshow(toPlot, cmap="bwr")
+    def plot(self, plot_data, folder, time, plot_data_str):
+        fig = imshow(plot_data, cmap="bwr")
         title(plot_data_str + folder + '_' + str(time))
         colorbar()
         savefig('/media/sophianowak/My Passport/Python Graphs/' + plot_data_str + folder + '_' + str(time) + '.png')
@@ -107,5 +107,5 @@ class StoreData(object):
 
 
 if __name__ == '__main__':
-    S = StoreData()
-    S.getData()
+    S = MakeDataPlots()
+    S.get_data()

@@ -106,15 +106,6 @@ class StoreData(object):
         # show()
 
 
-    # # Ploting lambda squared
-    # fig3 = pcolor(lambda_squared, cmap = "bwr")
-    # title(r'$\lambda^2$' + folder + '_' + str(time))
-    # colorbar()
-    # # savefig('/media/sophianowak/My Passport/Python Graphs/' + item + '_' + str(time) + '.png')
-    # # close()
-    # show()
-
-
 if __name__ == '__main__':
     S = StoreData()
     S.getData()

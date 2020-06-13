@@ -10,7 +10,6 @@ class StoreData(object):
         folder_dir = '/media/sophianowak/My Passport/AsymmetricScan400/'
         fileList = ['uix', 'uiy', 'uiz', 'bx', 'by', 'bz', 'ex', 'ey', 'ez', 'jx', 'jy', 'jz', 'ne', 'ni']
         folderList = ['d10-gf0']  # , 'd10.5-gf0', 'd11-gf0', 'd12-gf0', 'd74-gf4'
-        folders_in_dir = []
         time = 62
 
         for folder in folderList:
@@ -27,8 +26,6 @@ class StoreData(object):
             # for time in range(0,102,1):
             for item in fileList:
                 current_dir = dir + '/' + item + '_' + str(time) + '.mat'
-                # print(current_dir)
-                # print(time)
                 # Check if the file exists, if it does store the data at that file to to the data 3-D array.
                 if os.path.isfile(current_dir):
                     rawData = scipy.io.loadmat(current_dir)
@@ -39,7 +36,7 @@ class StoreData(object):
             self.calculations(data, folder, time)
 
     def calculations(self, data, folder, time):
-        # For each folder perform calculations.  np.multiply(a, b)
+        # For each folder perform calculations.
         # print((data[13]).shape)
         nix = data[13] * data[0]
         niy = data[13] * data[1]
@@ -55,43 +52,59 @@ class StoreData(object):
         Fe2 = data[12] * data[7] - nex * data[5] + nez * data[3]
         Fe3 = data[12] * data[8] + nex * data[4] - ney * data[3]
 
-        znormz = (data[13] * Fe0 - nix * Fe1 - niy * Fe2 - niz * Fe3) / neg
-        znormo = znormz * neg / nig
+        [T0, T1, T2, T3, sqrtW] = self.contractT(data, nix, niy, niz)
+        denom = sqrtW * (data[13] ** 2 - nix ** 2 - niy ** 2 - niz ** 2) + (T0 * data[13] - T1 * nix - T2 * niy - T3 * niz)
 
-        [T0, T1, T2, T3, sqrtW] = self.contractT(data);
-        denom = sqrtW * (ni ** 2 - nix ** 2 - niy ** 2 - niz ** 2) + ...
-        (T0 * ni - T1 * nix - T2 * niy - T3 * niz);
+        Us0 = (sqrtW * data[13] + T0) / denom
+        Us1 = (sqrtW * nix + T1) / denom
+        Us2 = (sqrtW * niy + T2) / denom
+        Us3 = (sqrtW * niz + T3) / denom
+        GAM = 1. / np.sqrt(Us0 ** 2 - Us1 ** 2 - Us2 ** 2 - Us3 ** 2)
+
+        Us0 = nig * GAM * Us0
+        Us1 = nig * GAM * Us1
+        Us2 = nig * GAM * Us2
+        Us3 = nig * GAM * Us3
+
+        znormz = (data[13] * Fe0 - nix * Fe1 - niy * Fe2 - niz * Fe3) / neg
+        onormz = (Us0 * Fe0 - Us1 * Fe1 - Us2 * Fe2 - Us3 * Fe3) / neg
+        znormo = znormz * neg / nig
+        onormo = onormz * neg / nig
+
+        delta = .5 * ((data[3] ** 2 + data[4] ** 2 + data[5] ** 2) - (data[6] ** 2 + data[7] ** 2 + data[8] ** 2))
+        pi =  (data[6] * data[3] + data[7] * data[4] + data[8] * data[5]) ** 2
+        lambda_squared = -delta + np.sqrt(delta ** 2 + pi)
 
         self.plot(znormz, folder, time)
+        self.plot(onormz, folder, time)
         self.plot(znormo, folder, time)
+        self.plot(onormo, folder, time)
+        self.plot(lambda_squared, folder, time)
 
-    def contractT(self, data):
+    def contractT(self, data, nix, niy, niz):
         Sx = data[7] * data[5] - data[8] * data[4]
         Sy = data[8] * data[3] - data[6] * data[5]
         Sz = data[6] * data[4] - data[7] * data[3]
         T00 = .5 * (data[6] ** 2 + data[7] ** 2 + data[8] ** 2) + .5 * (data[3] ** 2 + data[4] ** 2 + data[5] ** 2)
-        edu = data[6] * data[0] + data[7] * data[1] + data[8] * data[2]
-        bdu = data[3] * data[0] + data[4] * data[1] + data[5] * data[2]
+        edu = data[6] * nix + data[7] * niy + data[8] * niz
+        bdu = data[3] * nix + data[4] * niy + data[5] * niz
 
-        T0 = T00 * u0 - (Sx * data[0] + Sy * data[1] + Sz * data[2])
-        T1 = Sx * u0 - T00 * data[0] + data[6] * edu + data[3] * bdu
-        T2 = Sy * u0 - T00 * data[1] + data[7] * edu + data[4] * bdu
-        T3 = Sz * u0 - T00 * data[2] + data[8] * edu + data[5] * bdu
+        T0 = T00 * data[13] - (Sx * nix + Sy * niy + Sz * niz)
+        T1 = Sx * data[13] - T00 * nix + data[6] * edu + data[3] * bdu
+        T2 = Sy * data[13] - T00 * niy + data[7] * edu + data[4] * bdu
+        T3 = Sz * data[13] - T00 * niz + data[8] * edu + data[5] * bdu
 
-        sqrtW = np.sqrt(T00 ** 2 - Sx ** 2 - Sy ** 2 - Sz ** 2);
+        sqrtW = np.sqrt(T00 ** 2 - Sx ** 2 - Sy ** 2 - Sz ** 2)
+        return T0, T1, T2, T3, sqrtW
 
     def plot(self, toPlot, folder, time):
-        # Plotting z normal z and z normal o
         fig = imshow(toPlot, cmap="bwr")
-        title(" " + folder + '_' + str(time))
+        title( " " + folder + '_' + str(time))
         colorbar()
-        # savefig('/media/sophianowak/My Passport/Python Graphs/' + item + '_' + str(time) + '.png')
-        # close()
-        show()
+        savefig('/media/sophianowak/My Passport/Python Graphs/' + '_' + str(time) + '.png')
+        close()
+        #show()
 
-    # delta = .5 * ((data[3] ** 2 + data[4] ** 2 + data[5] ** 2) - (data[6] ** 2 + data[7] ** 2 + data[8] ** 2))
-    # pi =  (data[6] * data[3] + data[7] * data[4] + data[8] * data[5]) ** 2
-    # lambda_squared = -nabla + np.sqrt(nabla ** 2 + pi ** 2)
 
     # # Ploting lambda squared
     # fig3 = pcolor(lambda_squared, cmap = "bwr")
@@ -100,7 +113,6 @@ class StoreData(object):
     # # savefig('/media/sophianowak/My Passport/Python Graphs/' + item + '_' + str(time) + '.png')
     # # close()
     # show()
-
 
 
 if __name__ == '__main__':

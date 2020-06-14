@@ -1,5 +1,6 @@
 import scipy.io
 import os
+import time
 import numpy as np
 from pylab import plot, xlabel, ylabel, show, title, imshow, colorbar, savefig, close, pcolor, gca, axis
 
@@ -23,7 +24,7 @@ class MakeDataPlots(object):
             counter = 0
 
             # Loop for finding the files.
-            # for time in range(0,102,1):
+            # for time in range(0,102):
             for item in file_list:
                 current_dir = dir + '/' + item + '_' + str(time) + '.mat'
                 # Check if the file exists, if it does store the data at that file to to the data 3-D array.
@@ -101,11 +102,16 @@ class MakeDataPlots(object):
         fig = imshow(plot_data, cmap="bwr")
         title(plot_data_str + folder + '_' + str(time))
         colorbar()
-        savefig('/media/sophianowak/My Passport/Python Graphs/' + plot_data_str + folder + '_' + str(time) + '.png')
+        # savefig('/media/sophianowak/My Passport/Python Graphs/' + plot_data_str + folder + '_' + str(time) + '.png')
         close()
         # show()
 
 
 if __name__ == '__main__':
+    start = time.time()
+
     S = MakeDataPlots()
     S.get_data()
+
+    end = time.time()
+    print(end - start) # In seconds.

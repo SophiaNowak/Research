@@ -15,29 +15,28 @@ class MakeDataPlots():
         self.dim2 = dim2
 
     def get_data(self):
-            # initialize a 3-D array, to the size of the data stored in each file
-           # change 14 to len of the file list
-            # print(self.folder_dir, self.file_list, self.folder_list, self.time_step, self.dim1, self.dim2)
-            data = np.zeros((len(file_list), dim1, dim2))
 
+        # initialize a 3-D array, to the size of the data stored in each file
+        # print(self.folder_dir, self.file_list, self.folder_list, self.time_step, self.dim1, self.dim2)
+        data = np.zeros((len(file_list), dim1, dim2))
 
-            # Get the correct address to the folder.
-            dir = folder_dir + folder
-            print(dir)
-            # Counter for taking care of what variable we are working with
-            counter = 0
+        # Get the correct address to the folder.
+        dir = folder_dir + folder
+        print(dir)
+        # Counter for taking care of what variable we are working with
+        counter = 0
 
-            # Loop for finding the files.
-            for item in file_list:
-                current_dir = dir + '/' + item + '_' + str(time_step) + '.mat'
-                # Check if the file exists, if it does store the data at that file to to the data 3-D array.
-                if os.path.isfile(current_dir):
-                    raw_data = scipy.io.loadmat(current_dir)
-                    # print(type(rawData[item]))
-                    # Store the data from mat lab
-                    data[counter, :, :] = raw_data[item]
-                counter = counter + 1
-            self.calculations(data, folder, time)
+        # Loop for finding the files.
+        for item in file_list:
+            current_dir = dir + '/' + item + '_' + str(time_step) + '.mat'
+            # Check if the file exists, if it does store the data at that file to to the data 3-D array.
+            if os.path.isfile(current_dir):
+                raw_data = scipy.io.loadmat(current_dir)
+                # print(type(rawData[item]))
+                # Store the data from mat lab
+                data[counter, :, :] = raw_data[item]
+            counter = counter + 1
+        self.calculations(data, folder, time)
 
     def calculations(self, data, folder, time):
         # For each folder perform calculations.
@@ -57,7 +56,8 @@ class MakeDataPlots():
         Fe3 = data[12] * data[8] + nex * data[4] - ney * data[3]
 
         [T0, T1, T2, T3, sqrtW] = self.contractT(data, nix, niy, niz)
-        denom = sqrtW * (data[13] ** 2 - nix ** 2 - niy ** 2 - niz ** 2) + (T0 * data[13] - T1 * nix - T2 * niy - T3 * niz)
+        denom = sqrtW * (data[13] ** 2 - nix ** 2 - niy ** 2 - niz ** 2) + (
+                    T0 * data[13] - T1 * nix - T2 * niy - T3 * niz)
 
         Us0 = (sqrtW * data[13] + T0) / denom
         Us1 = (sqrtW * nix + T1) / denom
@@ -76,7 +76,7 @@ class MakeDataPlots():
         onormo = onormz * neg / nig
 
         delta = .5 * ((data[3] ** 2 + data[4] ** 2 + data[5] ** 2) - (data[6] ** 2 + data[7] ** 2 + data[8] ** 2))
-        pi =  (data[6] * data[3] + data[7] * data[4] + data[8] * data[5]) ** 2
+        pi = (data[6] * data[3] + data[7] * data[4] + data[8] * data[5]) ** 2
         lambda_squared = -delta + np.sqrt(delta ** 2 + pi)
 
         self.plot(znormz, folder, time, "znormz ")
@@ -103,13 +103,13 @@ class MakeDataPlots():
 
     def plot(self, plot_data, folder, time, plot_data_str):
         val = np.amax(plot_data)
-        fig = imshow(plot_data, cmap="bwr", clim = (-val, val))
+        fig = imshow(plot_data, cmap="bwr", clim=(-val, val))
         title(plot_data_str + folder + '_' + str(time_step))
         colorbar()
         # print('/media/sophianowak/My Passport/Python Graphs/' + plot_data_str + folder + '_' + str(time_step))
-        # savefig('/media/sophianowak/My Passport/Python Graphs/' + plot_data_str + folder + '_' + str(time_step) + '.png')
-        # close()
-        #show()
+        savefig('/media/sophianowak/My Passport/Python Graphs/' + plot_data_str + folder + '_' + str(time_step) + '.png')
+        close()
+        # show()
 
 
 if __name__ == '__main__':
@@ -117,14 +117,14 @@ if __name__ == '__main__':
     # Change the file directory variable depending on where the data is currently stored.
     folder_dir = '/media/sophianowak/My Passport/AsymmetricScan400/'
     file_list = ['uix', 'uiy', 'uiz', 'bx', 'by', 'bz', 'ex', 'ey', 'ez', 'jx', 'jy', 'jz', 'ne', 'ni']
-    folder_list = ['d10-gf0', 'd10.5-gf0', 'd11-gf0', 'd12-gf0', 'd74-gf4']  # , 'd10.5-gf0', 'd11-gf0', 'd12-gf0', 'd74-gf4'
-    time_step = 80
+    folder_list = ['d10-gf0', 'd10.5-gf0', 'd11-gf0', 'd12-gf0', 'd74-gf4']
+    # Dimensions of the data in each file.
     dim1 = 1680
     dim2 = 3360
     for folder in folder_list:
-        for time_step in range(0,102):
+        for time_step in range(0, 102):
             S = MakeDataPlots(folder_dir, file_list, folder_list, time_step, dim1, dim2)
             S.get_data()
 
     end = time.time()
-    print(end - start) # In seconds.
+    print(end - start)  # In seconds.

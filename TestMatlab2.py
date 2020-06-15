@@ -125,6 +125,7 @@ if __name__ == '__main__':
         for time_step in range(0, 102):
             S = MakeDataPlots(folder_dir, file_list, folder_list, time_step, dim1, dim2)
             S.get_data()
+            # clear class instance??? del S
 
     end = time.time()
     print(end - start)  # In seconds.

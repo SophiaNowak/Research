@@ -5,17 +5,21 @@ import numpy as np
 from pylab import plot, xlabel, ylabel, show, title, imshow, colorbar, savefig, close, pcolor, gca, axis
 
 
-class MakeDataPlots(object):
-    def get_data(self):
-        # Change the file directory variable depending on where the data is currently stored.
-        folder_dir = '/media/sophianowak/My Passport/AsymmetricScan400/'
-        file_list = ['uix', 'uiy', 'uiz', 'bx', 'by', 'bz', 'ex', 'ey', 'ez', 'jx', 'jy', 'jz', 'ne', 'ni']
-        folder_list = ['d10-gf0']  # , 'd10.5-gf0', 'd11-gf0', 'd12-gf0', 'd74-gf4'
-        time = 80
+class MakeDataPlots():
+    def __init__(self, folder_dir, file_list, folder_list, time_step, dim1, dim2):
+        self.folder_dir = folder_dir
+        self.file_list = file_list
+        self.folder_list = folder_list
+        self.time_step = time_step
+        self.dim1 = dim1
+        self.dim2 = dim2
 
-        for folder in folder_list:
+    def get_data(self):
             # initialize a 3-D array, to the size of the data stored in each file
-            data = np.zeros((14, 1680, 3360))
+           # change 14 to len of the file list
+            # print(self.folder_dir, self.file_list, self.folder_list, self.time_step, self.dim1, self.dim2)
+            data = np.zeros((len(file_list), dim1, dim2))
+
 
             # Get the correct address to the folder.
             dir = folder_dir + folder
@@ -24,9 +28,8 @@ class MakeDataPlots(object):
             counter = 0
 
             # Loop for finding the files.
-            # for time in range(0,102):
             for item in file_list:
-                current_dir = dir + '/' + item + '_' + str(time) + '.mat'
+                current_dir = dir + '/' + item + '_' + str(time_step) + '.mat'
                 # Check if the file exists, if it does store the data at that file to to the data 3-D array.
                 if os.path.isfile(current_dir):
                     raw_data = scipy.io.loadmat(current_dir)
@@ -101,18 +104,27 @@ class MakeDataPlots(object):
     def plot(self, plot_data, folder, time, plot_data_str):
         val = np.amax(plot_data)
         fig = imshow(plot_data, cmap="bwr", clim = (-val, val))
-        title(plot_data_str + folder + '_' + str(time))
+        title(plot_data_str + folder + '_' + str(time_step))
         colorbar()
-        # savefig('/media/sophianowak/My Passport/Python Graphs/' + plot_data_str + folder + '_' + str(time) + '.png')
+        # print('/media/sophianowak/My Passport/Python Graphs/' + plot_data_str + folder + '_' + str(time_step))
+        # savefig('/media/sophianowak/My Passport/Python Graphs/' + plot_data_str + folder + '_' + str(time_step) + '.png')
         # close()
-        show()
+        #show()
 
 
 if __name__ == '__main__':
     start = time.time()
-
-    S = MakeDataPlots()
-    S.get_data()
+    # Change the file directory variable depending on where the data is currently stored.
+    folder_dir = '/media/sophianowak/My Passport/AsymmetricScan400/'
+    file_list = ['uix', 'uiy', 'uiz', 'bx', 'by', 'bz', 'ex', 'ey', 'ez', 'jx', 'jy', 'jz', 'ne', 'ni']
+    folder_list = ['d10-gf0', 'd10.5-gf0', 'd11-gf0', 'd12-gf0', 'd74-gf4']  # , 'd10.5-gf0', 'd11-gf0', 'd12-gf0', 'd74-gf4'
+    time_step = 80
+    dim1 = 1680
+    dim2 = 3360
+    for folder in folder_list:
+        for time_step in range(0,102):
+            S = MakeDataPlots(folder_dir, file_list, folder_list, time_step, dim1, dim2)
+            S.get_data()
 
     end = time.time()
     print(end - start) # In seconds.

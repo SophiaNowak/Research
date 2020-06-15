@@ -33,23 +33,23 @@ for folder in folderList:
                 data.append(rawData[item])
 
 
-    # For each folder perform calculations.
-    nix = data[13] * data[0]
-    niy = data[13] * data[1]
-    niz = data[13] * data[2]
-    nig = data[13] * np.sqrt(1 - data[0] ** 2 - data[1] ** 2 - data[2] ** 2)
-    nex = nix - data[9]
-    ney = niy - data[10]
-    nez = niz - data[11]
-    neg = np.sqrt(data[12] ** 2 - nex ** 2 - ney ** 2 - nez ** 2)
-
-    Fe0 = nex * data[6] + ney * data[7] + nez * data[8]
-    Fe1 = data[12] * data[6] + ney * data[5] - nez * data[4]
-    Fe2 = data[12] * data[7] - nex * data[5] + nez * data[3]
-    Fe3 = data[12] * data[8] + nex * data[4] - ney * data[3]
-
-    znormz = (data[13] * Fe0 - nix * Fe1 - niy * Fe2 - niz * Fe3) / neg
-    znormo = znormz * neg / nig;
+    # # For each folder perform calculations.
+    # nix = data[13] * data[0]
+    # niy = data[13] * data[1]
+    # niz = data[13] * data[2]
+    # nig = data[13] * np.sqrt(1 - data[0] ** 2 - data[1] ** 2 - data[2] ** 2)
+    # nex = nix - data[9]
+    # ney = niy - data[10]
+    # nez = niz - data[11]
+    # neg = np.sqrt(data[12] ** 2 - nex ** 2 - ney ** 2 - nez ** 2)
+    #
+    # Fe0 = nex * data[6] + ney * data[7] + nez * data[8]
+    # Fe1 = data[12] * data[6] + ney * data[5] - nez * data[4]
+    # Fe2 = data[12] * data[7] - nex * data[5] + nez * data[3]
+    # Fe3 = data[12] * data[8] + nex * data[4] - ney * data[3]
+    #
+    # znormz = (data[13] * Fe0 - nix * Fe1 - niy * Fe2 - niz * Fe3) / neg
+    # znormo = znormz * neg / nig;
 
     # # Plotting z normal z and z normal o
     # fig = pcolor(znormz, cmap="bwr")

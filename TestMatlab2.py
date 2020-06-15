@@ -11,7 +11,7 @@ class MakeDataPlots(object):
         folder_dir = '/media/sophianowak/My Passport/AsymmetricScan400/'
         file_list = ['uix', 'uiy', 'uiz', 'bx', 'by', 'bz', 'ex', 'ey', 'ez', 'jx', 'jy', 'jz', 'ne', 'ni']
         folder_list = ['d10-gf0']  # , 'd10.5-gf0', 'd11-gf0', 'd12-gf0', 'd74-gf4'
-        time = 62
+        time = 80
 
         for folder in folder_list:
             # initialize a 3-D array, to the size of the data stored in each file
@@ -99,12 +99,13 @@ class MakeDataPlots(object):
         return T0, T1, T2, T3, sqrtW
 
     def plot(self, plot_data, folder, time, plot_data_str):
-        fig = imshow(plot_data, cmap="bwr")
+        val = np.amax(plot_data)
+        fig = imshow(plot_data, cmap="bwr", clim = (-val, val))
         title(plot_data_str + folder + '_' + str(time))
         colorbar()
         # savefig('/media/sophianowak/My Passport/Python Graphs/' + plot_data_str + folder + '_' + str(time) + '.png')
-        close()
-        # show()
+        # close()
+        show()
 
 
 if __name__ == '__main__':

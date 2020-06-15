@@ -36,9 +36,9 @@ class MakeDataPlots():
                 # Store the data from mat lab
                 data[counter, :, :] = raw_data[item]
             counter = counter + 1
-        self.calculations(data, folder, time)
+        self.calculations(data, folder, time_step)
 
-    def calculations(self, data, folder, time):
+    def calculations(self, data, folder, time_step):
         # For each folder perform calculations.
         # print((data[13]).shape)
         nix = data[13] * data[0]
@@ -79,11 +79,11 @@ class MakeDataPlots():
         pi = (data[6] * data[3] + data[7] * data[4] + data[8] * data[5]) ** 2
         lambda_squared = -delta + np.sqrt(delta ** 2 + pi)
 
-        self.plot(znormz, folder, time, "znormz ")
-        self.plot(onormz, folder, time, "onormz ")
-        self.plot(znormo, folder, time, "znormo ")
-        self.plot(onormo, folder, time, "onormo ")
-        self.plot(lambda_squared, folder, time, r'$\lambda^2$ ')
+        self.plot(znormz, folder, time_step, "znormz ")
+        self.plot(onormz, folder, time_step, "onormz ")
+        self.plot(znormo, folder, time_step, "znormo ")
+        self.plot(onormo, folder, time_step, "onormo ")
+        self.plot(lambda_squared, folder, time_step, r'$\lambda^2$ ')
 
     def contractT(self, data, nix, niy, niz):
         Sx = data[7] * data[5] - data[8] * data[4]
@@ -101,9 +101,9 @@ class MakeDataPlots():
         sqrtW = np.sqrt(T00 ** 2 - Sx ** 2 - Sy ** 2 - Sz ** 2)
         return T0, T1, T2, T3, sqrtW
 
-    def plot(self, plot_data, folder, time, plot_data_str):
+    def plot(self, plot_data, folder, time_step, plot_data_str):
         val = np.amax(plot_data)
-        fig = imshow(plot_data, cmap="bwr", clim=(-val, val))
+        fig = imshow(plot_data, cmap = "bwr", clim=(-val, val))
         title(plot_data_str + folder + '_' + str(time_step))
         colorbar()
         # print('/media/sophianowak/My Passport/Python Graphs/' + plot_data_str + folder + '_' + str(time_step))

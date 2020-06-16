@@ -117,15 +117,15 @@ if __name__ == '__main__':
     # Change the file directory variable depending on where the data is currently stored.
     folder_dir = '/media/sophianowak/My Passport/AsymmetricScan400/'
     file_list = ['uix', 'uiy', 'uiz', 'bx', 'by', 'bz', 'ex', 'ey', 'ez', 'jx', 'jy', 'jz', 'ne', 'ni']
-    folder_list = ['d10-gf0', 'd10.5-gf0', 'd11-gf0', 'd12-gf0', 'd74-gf4']
+    folder_list = [ 'd74-gf4'] #'d10-gf0', 'd10.5-gf0', 'd11-gf0', 'd12-gf0',
     # Dimensions of the data in each file.
     dim1 = 1680
     dim2 = 3360
     for folder in folder_list:
-        for time_step in range(0, 102):
+        for time_step in range(0, 99):
             S = MakeDataPlots(folder_dir, file_list, folder_list, time_step, dim1, dim2)
             S.get_data()
-            # clear class instance??? del S
+            del S
 
     end = time.time()
     print(end - start)  # In seconds.

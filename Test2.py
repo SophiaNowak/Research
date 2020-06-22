@@ -3,6 +3,7 @@ import numpy as np
 from pylab import plot, xlabel, ylabel, show, title, scatter, imshow, colorbar
 import os
 
+
 # TODO: figure out if it is loading everything it needs to in, and check how to get it to only care about the data files.
 #  Be more specific in the directory?
 

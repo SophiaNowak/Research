@@ -78,12 +78,13 @@ class MakeDataPlots():
         delta = .5 * ((data[3] ** 2 + data[4] ** 2 + data[5] ** 2) - (data[6] ** 2 + data[7] ** 2 + data[8] ** 2))
         pi = (data[6] * data[3] + data[7] * data[4] + data[8] * data[5]) ** 2
         lambda_squared = -delta + np.sqrt(delta ** 2 + pi)
+        print(len(znormz))
 
-        self.plot(znormz, folder, time_step, "znormz ")
-        self.plot(onormz, folder, time_step, "onormz ")
-        self.plot(znormo, folder, time_step, "znormo ")
-        self.plot(onormo, folder, time_step, "onormo ")
-        self.plot(lambda_squared, folder, time_step, r'$\lambda^2$ ')
+        self.plot(znormz, folder, time_step, "znormz ", data)
+        self.plot(onormz, folder, time_step, "onormz ", data)
+        self.plot(znormo, folder, time_step, "znormo ", data)
+        self.plot(onormo, folder, time_step, "onormo ", data)
+        self.plot(lambda_squared, folder, time_step, r'$\lambda^2$ ', data)
 
     def contractT(self, data, nix, niy, niz):
         Sx = data[7] * data[5] - data[8] * data[4]
@@ -102,7 +103,7 @@ class MakeDataPlots():
         return T0, T1, T2, T3, sqrtW
 
     def findCenter(self, data):
-        abs_data = np.absolute(data[3:,:])
+        abs_data = np.absolute(data[3])
         xval_sum = np.sum(abs_data, 0)  # line of x vals,
         print(abs_data.shape)
         print(xval_sum.shape)
@@ -112,9 +113,9 @@ class MakeDataPlots():
 
         return x_pos_of_xline, z_pos_of_xline
 
-    def plot(self, plot_data, folder, time_step, plot_data_str):
+    def plot(self, plot_data, folder, time_step, plot_data_str, data):
         val = np.amax(plot_data)
-        [xpos, zpos] = self.findCenter(plot_data)
+        [xpos, zpos] = self.findCenter(data)
         print(xpos, zpos)
         if 1800 >= xpos >= 1400:
             xlim(xpos-200, xpos+200)

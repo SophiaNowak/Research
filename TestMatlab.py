@@ -6,13 +6,13 @@ from pylab import plot, xlabel, ylabel, show, title, imshow, colorbar, savefig, 
 # Change the file directory variable depending on where the data is currently stored.
 folder_dir = '/media/sophianowak/My Passport/AsymmetricScan400/'
 fileList = ['uix', 'uiy', 'uiz', 'bx', 'by', 'bz', 'ex', 'ey', 'ez', 'jx', 'jy', 'jz', 'ne', 'ni']
-folderList = ['d11-gf0'] # , 'd10.5-gf0', 'd11-gf0', 'd12-gf0', 'd74-gf4'
+folderList = ['d10.5-gf0'] # , 'd10.5-gf0', 'd11-gf0', 'd12-gf0', 'd74-gf4'
 folders_in_dir = []
 
 
 for folder in folderList:
     # intitalize a 3-D array
-    x = np.zeros((1680, 3360, 13))  # Make a 10 by 20 by 30 array
+    # x = np.zeros((1680, 3360, 13))  # Make a 10 by 20 by 30 array
 
 
     # Get the correct address to the folder.
@@ -21,7 +21,7 @@ for folder in folderList:
     # Create empty list to later store data from each folder in.
     data = []
     # Loop for finding the files.
-    for time in range(0,102,1):
+    for time in range(0,99):
         for item in fileList:
             current_dir = dir + '/' + item + '_' + str(time) + '.mat'
             print(current_dir)

@@ -103,15 +103,15 @@ class MakeDataPlots():
 
     def plot(self, plot_data, folder, time_step, plot_data_str):
         val = np.amax(plot_data)
-        fig = imshow(plot_data, cmap = "bwr", clim=(-val, val)) #, extent=[1400,1500,700,800]
-        xlim(1400,1800)
-        ylim(650,950)
+        fig = imshow(plot_data, cmap = "bwr", clim=(-val, val))
+        xlim(1400, 1800)
+        ylim(650, 950)
         title(plot_data_str + folder + '_' + str(time_step))
         colorbar()
-        print('/media/sophianowak/My Passport/Python Graphs/' + plot_data_str + folder + '_' + str(time_step))
-        # savefig('/media/sophianowak/My Passport/Python Graphs/' + plot_data_str + folder + '_' + str(time_step) + '.png')
-        # close()
-        show()
+        # print('/media/sophianowak/My Passport/Python Graphs/' + plot_data_str + folder + '_' + str(time_step))
+        savefig('/media/sophianowak/My Passport/Python Graphs Resize/' + plot_data_str + folder + '_' + str(time_step) + '.png')
+        close()
+        # show()
 
 
 if __name__ == '__main__':
@@ -119,7 +119,7 @@ if __name__ == '__main__':
     # Change the file directory variable depending on where the data is currently stored.
     folder_dir = '/media/sophianowak/My Passport/AsymmetricScan400/'
     file_list = ['uix', 'uiy', 'uiz', 'bx', 'by', 'bz', 'ex', 'ey', 'ez', 'jx', 'jy', 'jz', 'ne', 'ni']
-    folder_list = ['d10-gf0', 'd10.5-gf0', 'd11-gf0', 'd12-gf0', 'd74-gf4'] #'d10-gf0', 'd10.5-gf0', 'd11-gf0', 'd12-gf0',
+    folder_list = [ 'd74-gf4'] #'d10-gf0', 'd10.5-gf0', 'd11-gf0', 'd12-gf0',
     # Dimensions of the data in each file.
     dim1 = 1680
     dim2 = 3360

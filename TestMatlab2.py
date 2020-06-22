@@ -101,17 +101,39 @@ class MakeDataPlots():
         sqrtW = np.sqrt(T00 ** 2 - Sx ** 2 - Sy ** 2 - Sz ** 2)
         return T0, T1, T2, T3, sqrtW
 
+    def findCenter(self, data):
+        abs_data = np.absolute(data)
+        xval_sum = np.sum(abs_data, 0)  # line of x vals,
+        # print(abs_data.shape)
+        # print(xval_sum.shape)
+        x_pos_of_xline = np.argmin(xval_sum)  # first index
+        zcut_of_xline = abs_data[:, x_pos_of_xline]
+        z_pos_of_xline = np.argmin(zcut_of_xline)  # zeroth index
+
+        return x_pos_of_xline, z_pos_of_xline
+
+
     def plot(self, plot_data, folder, time_step, plot_data_str):
         val = np.amax(plot_data)
-        fig = imshow(plot_data, cmap = "bwr", clim=(-val, val))
-        xlim(1400, 1800)
-        ylim(650, 950)
+        [xpos, zpos] = self.findCenter(plot_data)
+        print(xpos, zpos)
+        if xpos in range(1400,1800):
+            xlim(xpos-200, xpos+200)
+        else:
+            xlim(1400, 1800)
+
+        if zpos in range(650, 950):
+            ylim(zpos-150, zpos+150)
+        else:
+            ylim(650, 950)
+
+        fig = imshow(plot_data, cmap = "bwr", clim=(-val, val)) # add two arguments like x axis and y axis
         title(plot_data_str + folder + '_' + str(time_step))
         colorbar()
-        # print('/media/sophianowak/My Passport/Python Graphs/' + plot_data_str + folder + '_' + str(time_step))
-        savefig('/media/sophianowak/My Passport/Python Graphs Resize/' + plot_data_str + folder + '_' + str(time_step) + '.png')
-        close()
-        # show()
+        print('/media/sophianowak/My Passport/Python Graphs/' + plot_data_str + folder + '_' + str(time_step))
+        # savefig('/media/sophianowak/My Passport/Python Graphs Resize/' + plot_data_str + folder + '_' + str(time_step) + '.png')
+        # close()
+        show()
 
 
 if __name__ == '__main__':
@@ -124,7 +146,7 @@ if __name__ == '__main__':
     dim1 = 1680
     dim2 = 3360
     for folder in folder_list:
-        for time_step in range(0, 99):
+        for time_step in range(72, 74):
             S = MakeDataPlots(folder_dir, file_list, folder_list, time_step, dim1, dim2)
             S.get_data()
             del S

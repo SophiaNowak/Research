@@ -102,27 +102,26 @@ class MakeDataPlots():
         return T0, T1, T2, T3, sqrtW
 
     def findCenter(self, data):
-        abs_data = np.absolute(data)
+        abs_data = np.absolute(data[3:,:])
         xval_sum = np.sum(abs_data, 0)  # line of x vals,
-        # print(abs_data.shape)
-        # print(xval_sum.shape)
+        print(abs_data.shape)
+        print(xval_sum.shape)
         x_pos_of_xline = np.argmin(xval_sum)  # first index
         zcut_of_xline = abs_data[:, x_pos_of_xline]
         z_pos_of_xline = np.argmin(zcut_of_xline)  # zeroth index
 
         return x_pos_of_xline, z_pos_of_xline
 
-
     def plot(self, plot_data, folder, time_step, plot_data_str):
         val = np.amax(plot_data)
         [xpos, zpos] = self.findCenter(plot_data)
         print(xpos, zpos)
-        if xpos in range(1400,1800):
+        if 1800 >= xpos >= 1400:
             xlim(xpos-200, xpos+200)
         else:
             xlim(1400, 1800)
 
-        if zpos in range(650, 950):
+        if 950 >= zpos >= 650:
             ylim(zpos-150, zpos+150)
         else:
             ylim(650, 950)

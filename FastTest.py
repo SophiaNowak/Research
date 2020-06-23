@@ -30,14 +30,37 @@ class MakeDataPlots():
         for item in file_list:
             current_dir = dir + '/' + item + '_' + str(time_step) + '.mat'
             # Check if the file exists, if it does store the data at that file to to the data 3-D array.
+            pList =['Pperp1e', 'Pperp2e', 'Ppare']
             if os.path.isfile(current_dir):
-                raw_data = scipy.io.loadmat(current_dir)
-                # print(type(rawData[item]))
-                # Store the data from mat lab
-                data[counter, :, :] = raw_data[item]
+                if counter == 14:
+                    raw_data = scipy.io.loadmat(current_dir)
+                    # print(type(rawData[item]))
+                    # Store the data from mat lab
+                    data[counter, :, :] = raw_data[pList[0]]
+                elif counter == 15:
+                    raw_data = scipy.io.loadmat(current_dir)
+                    # print(type(rawData[item]))
+                    # Store the data from mat lab
+                    data[counter, :, :] = raw_data[pList[1]]
+                elif counter == 16:
+                    raw_data = scipy.io.loadmat(current_dir)
+                    # print(type(rawData[item]))
+                    # Store the data from mat lab
+                    data[counter, :, :] = raw_data[pList[2]]
+                else:
+                    raw_data = scipy.io.loadmat(current_dir)
+                    # print(type(rawData[item]))
+                    # Store the data from mat lab
+                    data[counter, :, :] = raw_data[item]
+
             counter = counter + 1
 
-        self.plot(data, folder, time_step, " ", data)
+        temperature = (data[14] + data[15] + data[16]) / data[12]
+        self.plot(temperature, folder, time_step, "temperature", data)
+        # self.plot(data[14], folder, time_step, " ", data)
+        # self.plot(data[15], folder, time_step, " ", data)
+        # self.plot(data[16], folder, time_step, " ", data)
+
 
 
     def findCenter(self, data):
@@ -52,7 +75,6 @@ class MakeDataPlots():
         return x_pos_of_xline, z_pos_of_xline
 
     def plot(self, plot_data, folder, time_step, plot_data_str, data):
-        val = .001
         [xpos, zpos] = self.findCenter(data)
         # print(xpos, zpos)
         if 1800 >= xpos >= 1400:
@@ -65,7 +87,7 @@ class MakeDataPlots():
         else:
             ylim(650, 950)
 
-        fig = imshow(plot_data, cmap = "bwr", clim=(-val, val)) # add two arguments like x axis and y axis
+        fig = imshow(plot_data, cmap = "plasma") # add two arguments like x axis and y axis
         title(plot_data_str + folder + '_' + str(time_step))
         colorbar()
         # print('/media/sophianowak/My Passport/Python Graphs 4/' + plot_data_str + folder + '_' + str(time_step))
@@ -78,14 +100,14 @@ if __name__ == '__main__':
     start = time.time()
     # Change the file directory variable depending on where the data is currently stored.
     folder_dir = '/media/sophianowak/My Passport/AsymmetricScan400/'
-    file_list = ['uix', 'uiy', 'uiz', 'bx', 'by', 'bz', 'ex', 'ey', 'ez', 'jx', 'jy', 'jz', 'ne', 'ni']
+    file_list = ['uix', 'uiy', 'uiz', 'bx', 'by', 'bz', 'ex', 'ey', 'ez', 'jx', 'jy', 'jz', 'ne', 'ni', 'P1', 'P2', 'Pp']
     folder_list = ['d10-gf0', 'd10.5-gf0', 'd11-gf0', 'd12-gf0','d74-gf4'] #'d10-gf0', 'd10.5-gf0', 'd11-gf0', 'd12-gf0',
     # Dimensions of the data in each file.
     dim1 = 1680
     dim2 = 3360
+    # Choose your time step, and folder to plot
     time_step = 36
-    folder = folder_list[0]
-    file_list = file_list[12]
+    folder = folder_list[4]
     S = MakeDataPlots(folder_dir, file_list, folder_list, time_step, dim1, dim2)
     S.get_data()
 

@@ -140,7 +140,7 @@ if __name__ == '__main__':
     # Change the file directory variable depending on where the data is currently stored.
     folder_dir = '/media/sophianowak/My Passport/AsymmetricScan400/'
     file_list = ['uix', 'uiy', 'uiz', 'bx', 'by', 'bz', 'ex', 'ey', 'ez', 'jx', 'jy', 'jz', 'ne', 'ni']
-    folder_list = ['d10-gf0', 'd10.5-gf0', 'd11-gf0', 'd12-gf0','d74-gf4'] #'d10-gf0', 'd10.5-gf0', 'd11-gf0', 'd12-gf0',
+    folder_list = ['d10-gf0', 'd10.5-gf0', 'd11-gf0', 'd12-gf0','d74-gf4'] #'d10-gf0', 'd10.5-gf0', 'd11-gf0', 'd12-gf0', # add more folders
     # Dimensions of the data in each file.
     dim1 = 1680
     dim2 = 3360
@@ -152,3 +152,5 @@ if __name__ == '__main__':
 
     end = time.time()
     print(end - start)  # In seconds.
+
+# for the 60 timestep plots, same imshow, all files in file list, plot PP, average of of the pPerp

@@ -40,14 +40,14 @@ class MakeDataPlots():
         # Get the correct address to the folder.
         dir = folder_dir + folder
         print(dir)
-        # Counter for taking care of what variable we are working with
+        # Counter for taking care of what file we are working with
         counter = 0
 
         # Loop for finding the files.
         for item in file_list:
             current_dir = dir + '/' + item + '_' + str(time_step) + '.mat'
-            # A list of the dictionary keys for the data files P1, P2, and Pp. The data for these files are stored in
-            # a different manner than the others.
+            # A list of the dictionary key names for the data files P1, P2, and Pp. The data for these files are
+            # stored in a different manner than the others.
             p_list = ['Pperp1e', 'Pperp2e', 'Ppare']
             # Check if the file exists, if it does store the data at that file to to the data 3-D array.
             if os.path.isfile(current_dir):
@@ -67,22 +67,22 @@ class MakeDataPlots():
                 else:
                     raw_data = scipy.io.loadmat(current_dir)
                     data[counter, :, :] = raw_data[item]
+                # TODO: ask if this is a real bad way of getting each file individually for the 60 step???
+                # Plot each file at the 60 time step
+                if time_step == 60:
+                    self.plotOthers(data[counter, :, :], folder, time_step, 'Time 60/', item, data)
             counter = counter + 1
-        self.getNorms(data, folder, time_step)
+        # After all of the data is stored, check the current time step, if at 60 find and plot temperature and p average
         if time_step == 60:
             self.time60(data, folder, time_step)
+        # All data is stored, and at any time step calulcate and plot the norms.
+        self.getNorms(data, folder, time_step)
 
     def time60(self, data, folder, time_step):
         temperature = (data[14] + data[15] + data[16]) / (data[12] * 3)
         p_average = (data[14] + data[15]) / 2
-
-
-        self.plot(temperature, folder, time_step, 'Time 60/', "temperature ", data)
-        self.plot(p_average, folder, time_step, 'Time 60/', "p_average ", data)
-
-
-
-
+        self.plotOthers(temperature, folder, time_step, 'Time 60/', "temperature ", data)
+        self.plotOthers(p_average, folder, time_step, 'Time 60/', "p_average ", data)
 
     def getNorms(self, data, folder, time_step):
         # For each folder perform calculations.
@@ -124,11 +124,11 @@ class MakeDataPlots():
         # pi = (data[6] * data[3] + data[7] * data[4] + data[8] * data[5]) ** 2
         # lambda_squared = -delta + np.sqrt(delta ** 2 + pi)
 
-        self.plot(znormz, folder, time_step, 'Python Graphs 5/', "znormz ", data)
-        self.plot(onormz, folder, time_step, 'Python Graphs 5/', "onormz ", data)
-        self.plot(znormo, folder, time_step, 'Python Graphs 5/', "znormo ", data)
-        self.plot(onormo, folder, time_step, 'Python Graphs 5/', "onormo ", data)
-        # self.plot(lambda_squared, folder, time_step, r'$\lambda^2$ ', data)
+        self.plotNorm(znormz, folder, time_step, 'Python Graphs 5/', "znormz ", data)
+        self.plotNorm(onormz, folder, time_step, 'Python Graphs 5/', "onormz ", data)
+        self.plotNorm(znormo, folder, time_step, 'Python Graphs 5/', "znormo ", data)
+        self.plotNorm(onormo, folder, time_step, 'Python Graphs 5/', "onormo ", data)
+        # self.plotNorm(lambda_squared, folder, time_step, r'$\lambda^2$ ', data)
 
     def contractT(self, data, nix, niy, niz):
         Sx = data[7] * data[5] - data[8] * data[4]
@@ -157,7 +157,8 @@ class MakeDataPlots():
 
         return x_pos_of_xline, z_pos_of_xline
 
-    def plot(self, plot_data, folder, time_step, where_to_save, plot_data_str, data):
+    # This plot takes care of plotting the norms as they require a different approach than the others.
+    def plotNorm(self, plot_data, folder, time_step, where_to_save, plot_data_str, data):
         # Set axis with val
         val = .001
         [xpos, zpos] = self.findCenter(data)
@@ -172,7 +173,30 @@ class MakeDataPlots():
         else:
             ylim(650, 950)
 
-        fig = imshow(plot_data, cmap="bwr", clim=(-val, val))  # add two arguments like x axis and y axis
+        fig = imshow(plot_data, cmap="bwr", clim=(-val, val))
+        title(plot_data_str + folder + '_' + str(time_step))
+        colorbar()
+        print('/media/sophianowak/My Passport/' + where_to_save + plot_data_str + folder + '_' + str(time_step))
+        # savefig('/media/sophianowak/My Passport/' + where_to_save + plot_data_str + folder + '_' + str(time_step) + '.png')
+        # close()
+        show()
+
+    # This plot takes care of plotting each individual file, as well as the temperature and p average.
+    def plotOthers(self, plot_data, folder, time_step, where_to_save, plot_data_str, data):
+        [xpos, zpos] = self.findCenter(data)
+        # print(xpos, zpos)
+        if 1800 >= xpos >= 1400:
+            xlim(xpos - 200, xpos + 200)
+        else:
+            xlim(1400, 1800)
+
+        if 950 >= zpos >= 650:
+            ylim(zpos - 150, zpos + 150)
+        else:
+            ylim(650, 950)
+
+        # No need for clim on these graphs.
+        fig = imshow(plot_data, cmap="inferno")
         title(plot_data_str + folder + '_' + str(time_step))
         colorbar()
         print('/media/sophianowak/My Passport/' + where_to_save + plot_data_str + folder + '_' + str(time_step))
@@ -202,7 +226,7 @@ if __name__ == '__main__':
     dim2 = 3360
     # Loop over all of the folders
     for folder in folder_list:
-        for time_step in range(0, 98):
+        for time_step in range(60, 63):
             graphs = MakeDataPlots(folder_dir, file_list, folder_list, time_step, dim1, dim2)
             graphs.get_data()
             del graphs
@@ -211,6 +235,3 @@ if __name__ == '__main__':
 
     end = time.time()
     print(end - start)  # In seconds.
-
-# TODO: for the 60 timestep plots, same imshow, all files in file list, plot PP, average of of the pPerp
-# temperature = (data[14] + data[15] + data[16]) / data[12] # TODO also divide by 3

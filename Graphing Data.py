@@ -75,7 +75,7 @@ class MakeDataPlots():
     def time60(self, data, folder, time_step):
         temperature = (data[14] + data[15] + data[16]) / (data[12] * 3)
         p_average = (data[14] + data[15]) / 2
-        
+
 
         self.plot(temperature, folder, time_step, 'Time 60/', "temperature ", data)
         self.plot(p_average, folder, time_step, 'Time 60/', "p_average ", data)

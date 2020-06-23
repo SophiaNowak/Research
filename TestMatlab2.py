@@ -72,18 +72,18 @@ class MakeDataPlots():
 
         znormz = -(data[13] * Fe0 - nix * Fe1 - niy * Fe2 - niz * Fe3) / neg
         onormz = -(Us0 * Fe0 - Us1 * Fe1 - Us2 * Fe2 - Us3 * Fe3) / neg
-        znormo = -znormz * neg / nig
-        onormo = -onormz * neg / nig
+        znormo = znormz * neg / nig
+        onormo = onormz * neg / nig
 
-        delta = .5 * ((data[3] ** 2 + data[4] ** 2 + data[5] ** 2) - (data[6] ** 2 + data[7] ** 2 + data[8] ** 2))
-        pi = (data[6] * data[3] + data[7] * data[4] + data[8] * data[5]) ** 2
-        lambda_squared = -delta + np.sqrt(delta ** 2 + pi)
+        # delta = .5 * ((data[3] ** 2 + data[4] ** 2 + data[5] ** 2) - (data[6] ** 2 + data[7] ** 2 + data[8] ** 2))
+        # pi = (data[6] * data[3] + data[7] * data[4] + data[8] * data[5]) ** 2
+        # lambda_squared = -delta + np.sqrt(delta ** 2 + pi)
 
         self.plot(znormz, folder, time_step, "znormz ", data)
         self.plot(onormz, folder, time_step, "onormz ", data)
         self.plot(znormo, folder, time_step, "znormo ", data)
         self.plot(onormo, folder, time_step, "onormo ", data)
-        self.plot(lambda_squared, folder, time_step, r'$\lambda^2$ ', data)
+        # self.plot(lambda_squared, folder, time_step, r'$\lambda^2$ ', data)
 
     def contractT(self, data, nix, niy, niz):
         Sx = data[7] * data[5] - data[8] * data[4]
@@ -113,7 +113,7 @@ class MakeDataPlots():
         return x_pos_of_xline, z_pos_of_xline
 
     def plot(self, plot_data, folder, time_step, plot_data_str, data):
-        val = np.amax(plot_data)
+        val = .001
         [xpos, zpos] = self.findCenter(data)
         # print(xpos, zpos)
         if 1800 >= xpos >= 1400:

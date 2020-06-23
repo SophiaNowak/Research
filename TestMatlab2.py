@@ -70,15 +70,14 @@ class MakeDataPlots():
         Us2 = nig * GAM * Us2
         Us3 = nig * GAM * Us3
 
-        znormz = (data[13] * Fe0 - nix * Fe1 - niy * Fe2 - niz * Fe3) / neg
-        onormz = (Us0 * Fe0 - Us1 * Fe1 - Us2 * Fe2 - Us3 * Fe3) / neg
-        znormo = znormz * neg / nig
-        onormo = onormz * neg / nig
+        znormz = -(data[13] * Fe0 - nix * Fe1 - niy * Fe2 - niz * Fe3) / neg
+        onormz = -(Us0 * Fe0 - Us1 * Fe1 - Us2 * Fe2 - Us3 * Fe3) / neg
+        znormo = -znormz * neg / nig
+        onormo = -onormz * neg / nig
 
         delta = .5 * ((data[3] ** 2 + data[4] ** 2 + data[5] ** 2) - (data[6] ** 2 + data[7] ** 2 + data[8] ** 2))
         pi = (data[6] * data[3] + data[7] * data[4] + data[8] * data[5]) ** 2
         lambda_squared = -delta + np.sqrt(delta ** 2 + pi)
-        print(len(znormz))
 
         self.plot(znormz, folder, time_step, "znormz ", data)
         self.plot(onormz, folder, time_step, "onormz ", data)
@@ -105,8 +104,8 @@ class MakeDataPlots():
     def findCenter(self, data):
         abs_data = np.absolute(data[3])
         xval_sum = np.sum(abs_data, 0)  # line of x vals,
-        print(abs_data.shape)
-        print(xval_sum.shape)
+        # print(abs_data.shape)
+        # print(xval_sum.shape)
         x_pos_of_xline = np.argmin(xval_sum)  # first index
         zcut_of_xline = abs_data[:, x_pos_of_xline]
         z_pos_of_xline = np.argmin(zcut_of_xline)  # zeroth index
@@ -116,7 +115,7 @@ class MakeDataPlots():
     def plot(self, plot_data, folder, time_step, plot_data_str, data):
         val = np.amax(plot_data)
         [xpos, zpos] = self.findCenter(data)
-        print(xpos, zpos)
+        # print(xpos, zpos)
         if 1800 >= xpos >= 1400:
             xlim(xpos-200, xpos+200)
         else:
@@ -130,10 +129,10 @@ class MakeDataPlots():
         fig = imshow(plot_data, cmap = "bwr", clim=(-val, val)) # add two arguments like x axis and y axis
         title(plot_data_str + folder + '_' + str(time_step))
         colorbar()
-        print('/media/sophianowak/My Passport/Python Graphs/' + plot_data_str + folder + '_' + str(time_step))
-        # savefig('/media/sophianowak/My Passport/Python Graphs Resize/' + plot_data_str + folder + '_' + str(time_step) + '.png')
-        # close()
-        show()
+        print('/media/sophianowak/My Passport/Python Graphs 4/' + plot_data_str + folder + '_' + str(time_step))
+        savefig('/media/sophianowak/My Passport/Python Graphs 4/' + plot_data_str + folder + '_' + str(time_step) + '.png')
+        close()
+        # show()
 
 
 if __name__ == '__main__':
@@ -141,12 +140,12 @@ if __name__ == '__main__':
     # Change the file directory variable depending on where the data is currently stored.
     folder_dir = '/media/sophianowak/My Passport/AsymmetricScan400/'
     file_list = ['uix', 'uiy', 'uiz', 'bx', 'by', 'bz', 'ex', 'ey', 'ez', 'jx', 'jy', 'jz', 'ne', 'ni']
-    folder_list = [ 'd74-gf4'] #'d10-gf0', 'd10.5-gf0', 'd11-gf0', 'd12-gf0',
+    folder_list = ['d10-gf0', 'd10.5-gf0', 'd11-gf0', 'd12-gf0','d74-gf4'] #'d10-gf0', 'd10.5-gf0', 'd11-gf0', 'd12-gf0',
     # Dimensions of the data in each file.
     dim1 = 1680
     dim2 = 3360
     for folder in folder_list:
-        for time_step in range(72, 74):
+        for time_step in range(0, 98):
             S = MakeDataPlots(folder_dir, file_list, folder_list, time_step, dim1, dim2)
             S.get_data()
             del S

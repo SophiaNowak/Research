@@ -11,6 +11,10 @@ class getFolderList():
         self.folder_prefix_list = folder_prefix_list
 
     def get_folders(self):
+        """
+        This function stores the names of the folders where the .mat data files are located.
+        :return: folder list.
+        """
         # Using the folder prefixes loop through the given directory where the folders are stored
         # appending them to the folder list.
         # Initialize a empty list.
@@ -33,8 +37,14 @@ class MakeDataPlots():
         self.dim1 = dim1
         self.dim2 = dim2
 
-    def get_data(self):
+    def get_data_and_plot(self):
+        """
+        This function creates a 3-D array that stores the given data files at any one given time step. This function
+        also calls various functions to preform further calculations as well as plot.
+        """
         # initialize a 3-D array, to the size of the data stored in each file
+        # The first dimension corresponds to the file, the second and third dimensions correspond to the first and
+        # second dimensions of the array of coordinates.
         data = np.zeros((len(file_list), dim1, dim2))
 
         # Get the correct address to the folder.
@@ -70,21 +80,34 @@ class MakeDataPlots():
                 # TODO: ask if this is a real bad way of getting each file individually for the 60 step???
                 # Plot each file at the 60 time step
                 if time_step == 60:
-                    self.plotOthers(data[counter, :, :], folder, time_step, 'Time 60/', item, data)
+                    self.plot_others(data[counter, :, :], folder, time_step, 'Time 60/', item, data)
             counter = counter + 1
         # After all of the data is stored, check the current time step, if at 60 find and plot temperature and p average
         if time_step == 60:
             self.time60(data, folder, time_step)
-        # All data is stored, and at any time step calulcate and plot the norms.
-        self.getNorms(data, folder, time_step)
+        self.get_norms(data, folder, time_step)
 
     def time60(self, data, folder, time_step):
+        """
+        This function performs some calculations on the data at time step 60 only, finding values for temperature and
+        p_average. It also calls plot_others on temperature and p_average.
+        :param data: 3-D array that holds the data points, sorted by file.
+        :param folder: current folder being used, contains .mat files.
+        :param time_step: current time step.
+        """
         temperature = (data[14] + data[15] + data[16]) / (data[12] * 3)
         p_average = (data[14] + data[15]) / 2
-        self.plotOthers(temperature, folder, time_step, 'Time 60/', "temperature ", data)
-        self.plotOthers(p_average, folder, time_step, 'Time 60/', "p_average ", data)
+        self.plot_others(temperature, folder, time_step, 'Time 60/', "temperature ", data)
+        self.plot_others(p_average, folder, time_step, 'Time 60/', "p_average ", data)
 
-    def getNorms(self, data, folder, time_step):
+    def get_norms(self, data, folder, time_step):
+        """
+        This function performs calculations on the data to find znormz, onormz, znormo, onormo, as well as calls
+        plot_norm.
+        :param data: 3-D array that holds the data points, sorted by file.
+        :param folder: current folder being used, contains .mat files.
+        :param time_step: current time step.
+        """
         # For each folder perform calculations.
         nix = data[13] * data[0]
         niy = data[13] * data[1]
@@ -120,15 +143,10 @@ class MakeDataPlots():
         znormo = znormz * neg / nig
         onormo = onormz * neg / nig
 
-        # delta = .5 * ((data[3] ** 2 + data[4] ** 2 + data[5] ** 2) - (data[6] ** 2 + data[7] ** 2 + data[8] ** 2))
-        # pi = (data[6] * data[3] + data[7] * data[4] + data[8] * data[5]) ** 2
-        # lambda_squared = -delta + np.sqrt(delta ** 2 + pi)
-
-        self.plotNorm(znormz, folder, time_step, 'Python Graphs 5/', "znormz ", data)
-        self.plotNorm(onormz, folder, time_step, 'Python Graphs 5/', "onormz ", data)
-        self.plotNorm(znormo, folder, time_step, 'Python Graphs 5/', "znormo ", data)
-        self.plotNorm(onormo, folder, time_step, 'Python Graphs 5/', "onormo ", data)
-        # self.plotNorm(lambda_squared, folder, time_step, r'$\lambda^2$ ', data)
+        self.plot_norm(znormz, folder, time_step, 'Python Graphs 5/', "znormz ", data)
+        self.plot_norm(onormz, folder, time_step, 'Python Graphs 5/', "onormz ", data)
+        self.plot_norm(znormo, folder, time_step, 'Python Graphs 5/', "znormo ", data)
+        self.plot_norm(onormo, folder, time_step, 'Python Graphs 5/', "onormo ", data)
 
     def contractT(self, data, nix, niy, niz):
         Sx = data[7] * data[5] - data[8] * data[4]
@@ -146,8 +164,14 @@ class MakeDataPlots():
         sqrtW = np.sqrt(T00 ** 2 - Sx ** 2 - Sy ** 2 - Sz ** 2)
         return T0, T1, T2, T3, sqrtW
 
-    def findCenter(self, data):
-        abs_data = np.absolute(data[3])
+    def find_center(self, data):
+        """
+        This function finds the center of the graph, where the magnetic reconnection occurs.
+        (TODO: is that what is happening)
+        :param data: 3-D array that holds the data points, sorted by file.
+        :return: returns the x and z values of the center point.
+        """
+        abs_data = np.absolute(data)
         xval_sum = np.sum(abs_data, 0)  # line of x vals,
         # print(abs_data.shape)
         # print(xval_sum.shape)
@@ -157,11 +181,20 @@ class MakeDataPlots():
 
         return x_pos_of_xline, z_pos_of_xline
 
-    # This plot takes care of plotting the norms as they require a different approach than the others.
-    def plotNorm(self, plot_data, folder, time_step, where_to_save, plot_data_str, data):
+    def plot_norm(self, plot_data, folder, time_step, where_to_save, plot_data_str, data):
+        """
+        This function is used to plot znormz, onormz, znormo, onormo. It uses a blue white red color bar, with
+        zero being white, red represents particles gaining energy, blue losing.
+        :param plot_data: what data is to be plotted.
+        :param folder: current folder being used, contains .mat files.
+        :param time_step: current time step.
+        :param where_to_save: name of the folder that the graphs are to be saved to.
+        :param plot_data_str: string containing the name of the data that is being plotted.
+        :param data: 3-D array that holds the data points, sorted by file.
+        """
         # Set axis with val
         val = .001
-        [xpos, zpos] = self.findCenter(data)
+        [xpos, zpos] = self.find_center(data[3])
         # print(xpos, zpos)
         if 1800 >= xpos >= 1400:
             xlim(xpos - 200, xpos + 200)
@@ -177,13 +210,21 @@ class MakeDataPlots():
         title(plot_data_str + folder + '_' + str(time_step))
         colorbar()
         print('/media/sophianowak/My Passport/' + where_to_save + plot_data_str + folder + '_' + str(time_step))
-        # savefig('/media/sophianowak/My Passport/' + where_to_save + plot_data_str + folder + '_' + str(time_step) + '.png')
-        # close()
+        #savefig('/media/sophianowak/My Passport/' + where_to_save + plot_data_str + folder + '_' + str(time_step) + '.png')
+        #close()
         show()
 
-    # This plot takes care of plotting each individual file, as well as the temperature and p average.
-    def plotOthers(self, plot_data, folder, time_step, where_to_save, plot_data_str, data):
-        [xpos, zpos] = self.findCenter(data)
+    def plot_others(self, plot_data, folder, time_step, where_to_save, plot_data_str, data):
+        """
+        This function plots temperature, p_average, as well as each data file. It uses inferno.
+        :param plot_data: what data is to be plotted.
+        :param folder: current folder being used, contains .mat files.
+        :param time_step: current time step.
+        :param where_to_save: name of the folder that the graphs are to be saved to.
+        :param plot_data_str: string containing the name of the data that is being plotted.
+        :param data: 3-D array that holds the data points, sorted by file.
+        """
+        [xpos, zpos] = self.find_center(data[3])
         # print(xpos, zpos)
         if 1800 >= xpos >= 1400:
             xlim(xpos - 200, xpos + 200)
@@ -200,8 +241,8 @@ class MakeDataPlots():
         title(plot_data_str + folder + '_' + str(time_step))
         colorbar()
         print('/media/sophianowak/My Passport/' + where_to_save + plot_data_str + folder + '_' + str(time_step))
-        # savefig('/media/sophianowak/My Passport/' + where_to_save + plot_data_str + folder + '_' + str(time_step) + '.png')
-        # close()
+        #savefig('/media/sophianowak/My Passport/' + where_to_save + plot_data_str + folder + '_' + str(time_step) + '.png')
+        #close()
         show()
 
 
@@ -228,7 +269,7 @@ if __name__ == '__main__':
     for folder in folder_list:
         for time_step in range(60, 63):
             graphs = MakeDataPlots(folder_dir, file_list, folder_list, time_step, dim1, dim2)
-            graphs.get_data()
+            graphs.get_data_and_plot()
             del graphs
 
 

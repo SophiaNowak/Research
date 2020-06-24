@@ -77,7 +77,6 @@ class MakeDataPlots():
                 else:
                     raw_data = scipy.io.loadmat(current_dir)
                     data[counter, :, :] = raw_data[item]
-                # TODO: ask if this is a real bad way of getting each file individually for the 60 step???
                 # Plot each file at the 60 time step
                 if time_step == 60:
                     self.plot_others(data[counter, :, :], folder, time_step, 'Time 60/', item, data)
@@ -89,16 +88,24 @@ class MakeDataPlots():
 
     def time60(self, data, folder, time_step):
         """
-        This function performs some calculations on the data at time step 60 only, finding values for temperature and
-        p_average. It also calls plot_others on temperature and p_average.
+
         :param data: 3-D array that holds the data points, sorted by file.
         :param folder: current folder being used, contains .mat files.
         :param time_step: current time step.
         """
         temperature = (data[14] + data[15] + data[16]) / (data[12] * 3)
-        p_average = (data[14] + data[15]) / 2
+        tperp = (data[14] + data[15]) / (2 * data[12])
+        tpara = data[16] / data[12]
+        kineticx = data[9] ** 2 / data[12]
+        kineticy = data[10] ** 2 / data[12]
+        kineticz = data[11] ** 2 / data[12]
+
+        self.plot_others(kineticx, folder, time_step, 'Time 60/', "kineticx", data)
+        self.plot_others(kineticy, folder, time_step, 'Time 60/', "kineticy", data)
+        self.plot_others(kineticz, folder, time_step, 'Time 60/', "kineticz", data)
         self.plot_others(temperature, folder, time_step, 'Time 60/', "temperature ", data)
-        self.plot_others(p_average, folder, time_step, 'Time 60/', "p_average ", data)
+        self.plot_others(tperp, folder, time_step, 'Time 60/', "tperp ", data)
+        self.plot_others(tpara, folder, time_step, 'Time 60/', "tpara ", data)
 
     def get_norms(self, data, folder, time_step):
         """
@@ -172,9 +179,9 @@ class MakeDataPlots():
         :return: returns the x and z values of the center point.
         """
         abs_data = np.absolute(data)
-        xval_sum = np.sum(abs_data, 0)  # line of x vals,
-        # print(abs_data.shape)
-        # print(xval_sum.shape)
+        xval_sum = np.sum(abs_data, 0)  # line of x vals, the zero here takes care of the vertical-ness
+        # sum along vertical lines, the min sum is the assumed x location of the x line
+        # assuming you can bend data vertical sum magnetic field and find min
         x_pos_of_xline = np.argmin(xval_sum)  # first index
         zcut_of_xline = abs_data[:, x_pos_of_xline]
         z_pos_of_xline = np.argmin(zcut_of_xline)  # zeroth index
@@ -216,7 +223,7 @@ class MakeDataPlots():
 
     def plot_others(self, plot_data, folder, time_step, where_to_save, plot_data_str, data):
         """
-        This function plots temperature, p_average, as well as each data file. It uses inferno.
+        This function plots temperature, tperp, as well as each data file. It uses inferno.
         :param plot_data: what data is to be plotted.
         :param folder: current folder being used, contains .mat files.
         :param time_step: current time step.
@@ -236,6 +243,7 @@ class MakeDataPlots():
         else:
             ylim(650, 950)
 
+        plot_data = plot_data[(zpos-150):(zpos+150), (xpos-200):(xpos+200)]
         # No need for clim on these graphs.
         fig = imshow(plot_data, cmap="inferno")
         title(plot_data_str + folder + '_' + str(time_step))
@@ -266,7 +274,7 @@ if __name__ == '__main__':
     dim2 = 3360
     # Loop over all of the folders
     for folder in folder_list:
-        for time_step in range(0, 98):
+        for time_step in range(55, 66):
             graphs = MakeDataPlots(folder_dir, file_list, folder_list, time_step, dim1, dim2)
             graphs.get_data_and_plot()
             del graphs

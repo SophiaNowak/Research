@@ -76,21 +76,21 @@ class MakeDataPlots():
 
     def plot(self, plot_data, folder, time_step, plot_data_str, data):
         [xpos, zpos] = self.findCenter(data)
-        print(xpos, zpos)
-        if 1800 >= xpos >= 1400:
-            xlim(xpos-200, xpos+200)
-        else:
-            xlim(1400, 1800)
-
-        if 950 >= zpos >= 650:
-            ylim(zpos-150, zpos+150)
-        else:
-            ylim(650, 950)
+        # print(xpos, zpos)
+        # if 1800 >= xpos >= 1400:
+        #     xlim(xpos-200, xpos+200)
+        # else:
+        #     xlim(1400, 1800)
+        #
+        # if 950 >= zpos >= 650:
+        #     ylim(zpos-150, zpos+150)
+        # else:
+        #     ylim(650, 950)
 
         print(plot_data.shape)
         plot_data = plot_data[(zpos-150):(zpos+150), (xpos-200):(xpos+200)]
         print(plot_data.shape)
-        
+
         fig = imshow(plot_data, cmap = "plasma") # add two arguments like x axis and y axis
         title(plot_data_str + folder + '_' + str(time_step))
         colorbar()

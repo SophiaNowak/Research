@@ -143,10 +143,10 @@ class MakeDataPlots():
         znormo = znormz * neg / nig
         onormo = onormz * neg / nig
 
-        self.plot_norm(znormz, folder, time_step, 'Python Graphs 5/', "znormz ", data)
-        self.plot_norm(onormz, folder, time_step, 'Python Graphs 5/', "onormz ", data)
-        self.plot_norm(znormo, folder, time_step, 'Python Graphs 5/', "znormo ", data)
-        self.plot_norm(onormo, folder, time_step, 'Python Graphs 5/', "onormo ", data)
+        self.plot_norm(znormz, folder, time_step, 'Python Graphs 6/', "znormz ", data)
+        self.plot_norm(onormz, folder, time_step, 'Python Graphs 6/', "onormz ", data)
+        self.plot_norm(znormo, folder, time_step, 'Python Graphs 6/', "znormo ", data)
+        self.plot_norm(onormo, folder, time_step, 'Python Graphs 6/', "onormo ", data)
 
     def contractT(self, data, nix, niy, niz):
         Sx = data[7] * data[5] - data[8] * data[4]
@@ -210,9 +210,9 @@ class MakeDataPlots():
         title(plot_data_str + folder + '_' + str(time_step))
         colorbar()
         print('/media/sophianowak/My Passport/' + where_to_save + plot_data_str + folder + '_' + str(time_step))
-        #savefig('/media/sophianowak/My Passport/' + where_to_save + plot_data_str + folder + '_' + str(time_step) + '.png')
-        #close()
-        show()
+        savefig('/media/sophianowak/My Passport/' + where_to_save + plot_data_str + folder + '_' + str(time_step) + '.png')
+        close()
+        # show()
 
     def plot_others(self, plot_data, folder, time_step, where_to_save, plot_data_str, data):
         """
@@ -241,10 +241,9 @@ class MakeDataPlots():
         title(plot_data_str + folder + '_' + str(time_step))
         colorbar()
         print('/media/sophianowak/My Passport/' + where_to_save + plot_data_str + folder + '_' + str(time_step))
-        #savefig('/media/sophianowak/My Passport/' + where_to_save + plot_data_str + folder + '_' + str(time_step) + '.png')
-        #close()
-        show()
-
+        savefig('/media/sophianowak/My Passport/' + where_to_save + plot_data_str + folder + '_' + str(time_step) + '.png')
+        close()
+        #show()
 
 
 if __name__ == '__main__':
@@ -267,12 +266,10 @@ if __name__ == '__main__':
     dim2 = 3360
     # Loop over all of the folders
     for folder in folder_list:
-        for time_step in range(60, 63):
+        for time_step in range(0, 98):
             graphs = MakeDataPlots(folder_dir, file_list, folder_list, time_step, dim1, dim2)
             graphs.get_data_and_plot()
             del graphs
-
-
 
     end = time.time()
     print(end - start)  # In seconds.

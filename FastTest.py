@@ -55,7 +55,7 @@ class MakeDataPlots():
 
             counter = counter + 1
 
-        temperature = (data[14] + data[15] + data[16]) / data[12]
+        temperature = (data[14] + data[15] + data[16]) / (data[12] * 3)
         self.plot(temperature, folder, time_step, "temperature", data)
         # self.plot(data[14], folder, time_step, " ", data)
         # self.plot(data[15], folder, time_step, " ", data)
@@ -76,32 +76,38 @@ class MakeDataPlots():
 
     def plot(self, plot_data, folder, time_step, plot_data_str, data):
         [xpos, zpos] = self.findCenter(data)
-        # print(xpos, zpos)
+        print(xpos, zpos)
         # if 1800 >= xpos >= 1400:
+        #     # xmin = xpos-200
+        #     # xmax = xpos+200
         #     xlim(xpos-200, xpos+200)
         # else:
+        #     # xmin = 1400
+        #     # xmax = 1800
         #     xlim(1400, 1800)
         #
         # if 950 >= zpos >= 650:
+        #     # zmin = zpos-150
+        #     # zmax = zpos+200
         #     ylim(zpos-150, zpos+150)
         # else:
+        #     # zmin = 650
+        #     # zmax = 950
         #     ylim(650, 950)
 
-        print(np.argmin(plot_data))
-        print(plot_data.shape)
-        plot_data = plot_data[(zpos-150):(zpos+150), (xpos-200):(xpos+200)]
-        print(plot_data.shape)
-        print(np.argmin(plot_data))
-        print(np.argmax(plot_data))
+        plot_data = plot_data[(zpos - 150):(zpos + 150), (xpos - 200):(xpos + 200)]
+        # print(plot_data.shape)
+        # print(np.min(plot_data))
+        # print(np.max(plot_data))
 
-
-        fig = imshow(plot_data, cmap = "inferno", clim =(None, None)) # add two arguments like x axis and y axis
+        fig = imshow(plot_data, cmap = "inferno", extent = [(xpos-200),(xpos+200), (zpos-150), (zpos+150)],
+                     origin = 'lower')
         title(plot_data_str + folder + '_' + str(time_step))
         colorbar()
         # print('/media/sophianowak/My Passport/Python Graphs 4/' + plot_data_str + folder + '_' + str(time_step))
         # savefig('/media/sophianowak/My Passport/Python Graphs 4/' + plot_data_str + folder + '_' + str(time_step) + '.png')
         # close()
-        show()
+        # show()
 
 
 if __name__ == '__main__':
@@ -109,13 +115,13 @@ if __name__ == '__main__':
     # Change the file directory variable depending on where the data is currently stored.
     folder_dir = '/media/sophianowak/My Passport/AsymmetricScan400/'
     file_list = ['uix', 'uiy', 'uiz', 'bx', 'by', 'bz', 'ex', 'ey', 'ez', 'jx', 'jy', 'jz', 'ne', 'ni', 'P1', 'P2', 'Pp']
-    folder_list = ['d10-gf0', 'd10.5-gf0', 'd11-gf0', 'd12-gf0','d74-gf4', 'd14-gf2'] #'d10-gf0', 'd10.5-gf0', 'd11-gf0', 'd12-gf0',
+    folder_list = ['d10-gf8', 'd10.5-gf0', 'd11-gf0', 'd12-gf0','d74-gf4', 'd14-gf2', 'd16-gf0', 'd200-gf10'] #'d10-gf0', 'd10.5-gf0', 'd11-gf0', 'd12-gf0',
     # Dimensions of the data in each file.
     dim1 = 1680
     dim2 = 3360
     # Choose your time step, and folder to plot
     time_step = 60
-    folder = folder_list[5]
+    folder = folder_list[7]
     S = MakeDataPlots(folder_dir, file_list, folder_list, time_step, dim1, dim2)
     S.get_data()
 

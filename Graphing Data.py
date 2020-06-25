@@ -216,7 +216,7 @@ class MakeDataPlots():
         fig = imshow(plot_data, cmap="bwr", clim=(-val, val))
         title(plot_data_str + folder + '_' + str(time_step))
         colorbar()
-        print('/media/sophianowak/My Passport/' + where_to_save + plot_data_str + folder + '_' + str(time_step))
+        # print('/media/sophianowak/My Passport/' + where_to_save + plot_data_str + folder + '_' + str(time_step))
         #savefig('/media/sophianowak/My Passport/' + where_to_save + plot_data_str + folder + '_' + str(time_step) + '.png')
         #close()
         # show()
@@ -233,24 +233,25 @@ class MakeDataPlots():
         """
         [xpos, zpos] = self.find_center(data[3])
         # print(xpos, zpos)
-        if 1800 >= xpos >= 1400:
-            xlim(xpos - 200, xpos + 200)
-        else:
-            xlim(1400, 1800)
-
-        if 950 >= zpos >= 650:
-            ylim(zpos - 150, zpos + 150)
-        else:
-            ylim(650, 950)
+        # if 1800 >= xpos >= 1400:
+        #     xlim(xpos - 200, xpos + 200)
+        # else:
+        #     xlim(1400, 1800)
+        #
+        # if 950 >= zpos >= 650:
+        #     ylim(zpos - 150, zpos + 150)
+        # else:
+        #     ylim(650, 950)
 
         plot_data = plot_data[(zpos-150):(zpos+150), (xpos-200):(xpos+200)]
         # No need for clim on these graphs.
-        fig = imshow(plot_data, cmap="inferno")
+        fig = imshow(plot_data, cmap="inferno", extent=[(xpos - 200), (xpos + 200), (zpos - 150), (zpos + 150)],
+                     origin='lower')
         title(plot_data_str + folder + '_' + str(time_step))
         colorbar()
         print('/media/sophianowak/My Passport/' + where_to_save + plot_data_str + folder + '_' + str(time_step))
-        # savefig('/media/sophianowak/My Passport/' + where_to_save + plot_data_str + folder + '_' + str(time_step) + '.png')
-        # close()
+        savefig('/media/sophianowak/My Passport/' + where_to_save + plot_data_str + folder + '_' + str(time_step) + '.png')
+        close()
         #show()
 
 

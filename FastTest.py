@@ -87,11 +87,15 @@ class MakeDataPlots():
         # else:
         #     ylim(650, 950)
 
+        print(np.argmin(plot_data))
         print(plot_data.shape)
         plot_data = plot_data[(zpos-150):(zpos+150), (xpos-200):(xpos+200)]
         print(plot_data.shape)
+        print(np.argmin(plot_data))
+        print(np.argmax(plot_data))
 
-        fig = imshow(plot_data, cmap = "plasma") # add two arguments like x axis and y axis
+
+        fig = imshow(plot_data, cmap = "inferno", clim =(None, None)) # add two arguments like x axis and y axis
         title(plot_data_str + folder + '_' + str(time_step))
         colorbar()
         # print('/media/sophianowak/My Passport/Python Graphs 4/' + plot_data_str + folder + '_' + str(time_step))
@@ -105,13 +109,13 @@ if __name__ == '__main__':
     # Change the file directory variable depending on where the data is currently stored.
     folder_dir = '/media/sophianowak/My Passport/AsymmetricScan400/'
     file_list = ['uix', 'uiy', 'uiz', 'bx', 'by', 'bz', 'ex', 'ey', 'ez', 'jx', 'jy', 'jz', 'ne', 'ni', 'P1', 'P2', 'Pp']
-    folder_list = ['d10-gf0', 'd10.5-gf0', 'd11-gf0', 'd12-gf0','d74-gf4'] #'d10-gf0', 'd10.5-gf0', 'd11-gf0', 'd12-gf0',
+    folder_list = ['d10-gf0', 'd10.5-gf0', 'd11-gf0', 'd12-gf0','d74-gf4', 'd14-gf2'] #'d10-gf0', 'd10.5-gf0', 'd11-gf0', 'd12-gf0',
     # Dimensions of the data in each file.
     dim1 = 1680
     dim2 = 3360
     # Choose your time step, and folder to plot
     time_step = 60
-    folder = folder_list[4]
+    folder = folder_list[5]
     S = MakeDataPlots(folder_dir, file_list, folder_list, time_step, dim1, dim2)
     S.get_data()
 

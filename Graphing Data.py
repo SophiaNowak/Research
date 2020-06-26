@@ -78,8 +78,8 @@ class MakeDataPlots():
                     raw_data = scipy.io.loadmat(current_dir)
                     data[counter, :, :] = raw_data[item]
                 # Plot each file at the 60 time step
-                if time_step == 60:
-                    self.plot_others(data[counter, :, :], folder, time_step, 'Time 60/', item, data)
+                # if time_step == 60:
+                #     self.plot_others(data[counter, :, :], folder, time_step, 'Collection I/', item, data)
             counter = counter + 1
         # After all of the data is stored, check the current time step, if at 60 find and plot temperature and p average
         if time_step == 60:
@@ -99,13 +99,12 @@ class MakeDataPlots():
         kineticx = data[9] ** 2 / data[12]
         kineticy = data[10] ** 2 / data[12]
         kineticz = data[11] ** 2 / data[12]
+        kineticTot = kineticx + kineticy + kineticz
 
-        self.plot_others(kineticx, folder, time_step, 'Time 60/', "kineticx", data)
-        self.plot_others(kineticy, folder, time_step, 'Time 60/', "kineticy", data)
-        self.plot_others(kineticz, folder, time_step, 'Time 60/', "kineticz", data)
-        self.plot_others(temperature, folder, time_step, 'Time 60/', "temperature ", data)
-        self.plot_others(tperp, folder, time_step, 'Time 60/', "tperp ", data)
-        self.plot_others(tpara, folder, time_step, 'Time 60/', "tpara ", data)
+        self.plot_others(kineticTot, folder, time_step, 'Collection I/kinetic/', "kinetic", data)
+        self.plot_others(temperature, folder, time_step, 'Collection I/temperature/', "temperature ", data)
+        # self.plot_others(tperp, folder, time_step, 'Collection I/', "tperp ", data)
+        # self.plot_others(tpara, folder, time_step, 'Collection I/', "tpara ", data)
 
     def get_norms(self, data, folder, time_step):
         """
@@ -150,10 +149,10 @@ class MakeDataPlots():
         znormo = znormz * neg / nig
         onormo = onormz * neg / nig
 
-        self.plot_norm(znormz, folder, time_step, 'Python Graphs 6/', "znormz ", data)
-        self.plot_norm(onormz, folder, time_step, 'Python Graphs 6/', "onormz ", data)
-        self.plot_norm(znormo, folder, time_step, 'Python Graphs 6/', "znormo ", data)
-        self.plot_norm(onormo, folder, time_step, 'Python Graphs 6/', "onormo ", data)
+        self.plot_norm(znormz, folder, time_step, 'Collection I/znormz/', "znormz ", data)
+        self.plot_norm(onormz, folder, time_step, 'Collection I/onormz/', "onormz ", data)
+        self.plot_norm(znormo, folder, time_step, 'Collection I/znormo/', "znormo ", data)
+        self.plot_norm(onormo, folder, time_step, 'Collection I/onormo/', "onormo ", data)
 
     def contractT(self, data, nix, niy, niz):
         Sx = data[7] * data[5] - data[8] * data[4]
@@ -174,7 +173,6 @@ class MakeDataPlots():
     def find_center(self, data):
         """
         This function finds the center of the graph, where the magnetic reconnection occurs.
-        (TODO: is that what is happening)
         :param data: 3-D array that holds the data points, sorted by file.
         :return: returns the x and z values of the center point.
         """
@@ -216,9 +214,9 @@ class MakeDataPlots():
         fig = imshow(plot_data, cmap="bwr", clim=(-val, val))
         title(plot_data_str + folder + '_' + str(time_step))
         colorbar()
-        # print('/media/sophianowak/My Passport/' + where_to_save + plot_data_str + folder + '_' + str(time_step))
-        #savefig('/media/sophianowak/My Passport/' + where_to_save + plot_data_str + folder + '_' + str(time_step) + '.png')
-        #close()
+        print('/media/sophianowak/My Passport/' + where_to_save + plot_data_str + folder + '_' + str(time_step))
+        savefig('/media/sophianowak/My Passport/' + where_to_save + plot_data_str + folder + '_' + str(time_step) + '.png')
+        close()
         # show()
 
     def plot_others(self, plot_data, folder, time_step, where_to_save, plot_data_str, data):
@@ -262,20 +260,22 @@ if __name__ == '__main__':
     # List of the file names, though these names may not necessarily correspond to the correct dictionary key where
     # the data is located.
     file_list = ['uix', 'uiy', 'uiz', 'bx', 'by', 'bz', 'ex', 'ey', 'ez', 'jx', 'jy', 'jz', 'ne', 'ni', 'P1', 'P2', 'Pp']
-    # Store the folder prefixes to later loop through storing all of the folders.
-    folder_prefix_list = ['d10', 'd10.5', 'd11', 'd12', 'd14', 'd16', 'd20', 'd27', 'd74', 'd200']
+    folder_list = ['d14-gf0', 'd14-gf4', 'd14-gf8', 'd27-gf0', 'd27-gf4', 'd27-gf8','d200-gf0', 'd200-gf4', 'd200-gf8'] #'d10-gf0', 'd10.5-gf0', 'd11-gf0', 'd12-gf0',
 
-    # Call the getFolderList class to create the list of the folders
-    folders = getFolderList(folder_dir, folder_prefix_list)
-    folder_list = folders.get_folders()
-    print(folder_list)
+    # # Store the folder prefixes to later loop through storing all of the folders.
+    # folder_prefix_list = ['d10', 'd10.5', 'd11', 'd12', 'd14', 'd16', 'd20', 'd27', 'd74', 'd200']
+    #
+    # # Call the getFolderList class to create the list of the folders
+    # folders = getFolderList(folder_dir, folder_prefix_list)
+    # folder_list = folders.get_folders()
+    # print(folder_list)
 
     # Dimensions of the data in each file.
     dim1 = 1680
     dim2 = 3360
     # Loop over all of the folders
     for folder in folder_list:
-        for time_step in range(55, 66):
+        for time_step in range(60, 61):
             graphs = MakeDataPlots(folder_dir, file_list, folder_list, time_step, dim1, dim2)
             graphs.get_data_and_plot()
             del graphs

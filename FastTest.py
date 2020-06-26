@@ -115,8 +115,8 @@ if __name__ == '__main__':
     # Change the file directory variable depending on where the data is currently stored.
     folder_dir = '/media/sophianowak/My Passport/AsymmetricScan400/'
     file_list = ['uix', 'uiy', 'uiz', 'bx', 'by', 'bz', 'ex', 'ey', 'ez', 'jx', 'jy', 'jz', 'ne', 'ni', 'P1', 'P2', 'Pp']
-    folder_list = ['d10-gf8', 'd10.5-gf0', 'd11-gf0', 'd12-gf0','d74-gf4', 'd14-gf2', 'd16-gf0', 'd200-gf10'] #'d10-gf0', 'd10.5-gf0', 'd11-gf0', 'd12-gf0',
-    # Dimensions of the data in each file.
+    folder_list = ['d10-gf0', 'd10-gf4', 'd10-gf8', 'd27-gf0', 'd27-gf4', 'd27-gf8','d200-gf0', 'd200-gf4', 'd200-gf8'] #'d10-gf0', 'd10.5-gf0', 'd11-gf0', 'd12-gf0',
+    # Dimensions of the  in each file.
     dim1 = 1680
     dim2 = 3360
     # Choose your time step, and folder to plot

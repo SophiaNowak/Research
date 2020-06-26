@@ -35,7 +35,7 @@ class MakeDataPlots():
             if os.path.isfile(current_dir):
                 if counter == 14:
                     raw_data = scipy.io.loadmat(current_dir)
-                    print("FUCK HELLO")
+                    print("FUCK HELLO?")
                     # print(type(rawData[item]))
                     # Store the data from mat lab
                     data[counter, :, :] = raw_data[pList[0]]

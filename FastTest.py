@@ -29,11 +29,13 @@ class MakeDataPlots():
         # Loop for finding the files.
         for item in file_list:
             current_dir = dir + '/' + item + '_' + str(time_step) + '.mat'
+            print(current_dir)
             # Check if the file exists, if it does store the data at that file to to the data 3-D array.
             pList =['Pperp1e', 'Pperp2e', 'Ppare']
             if os.path.isfile(current_dir):
                 if counter == 14:
                     raw_data = scipy.io.loadmat(current_dir)
+                    print("FUCK HELLO")
                     # print(type(rawData[item]))
                     # Store the data from mat lab
                     data[counter, :, :] = raw_data[pList[0]]
@@ -104,10 +106,10 @@ class MakeDataPlots():
                      origin = 'lower')
         title(plot_data_str + folder + '_' + str(time_step))
         colorbar()
-        # print('/media/sophianowak/My Passport/Python Graphs 4/' + plot_data_str + folder + '_' + str(time_step))
+        print('/media/sophianowak/My Passport/INSERT LOCATION HERE/' + plot_data_str + folder + '_' + str(time_step))
         # savefig('/media/sophianowak/My Passport/Python Graphs 4/' + plot_data_str + folder + '_' + str(time_step) + '.png')
         # close()
-        # show()
+        show()
 
 
 if __name__ == '__main__':
@@ -121,7 +123,7 @@ if __name__ == '__main__':
     dim2 = 3360
     # Choose your time step, and folder to plot
     time_step = 60
-    folder = folder_list[7]
+    folder = folder_list[1]
     S = MakeDataPlots(folder_dir, file_list, folder_list, time_step, dim1, dim2)
     S.get_data()
 

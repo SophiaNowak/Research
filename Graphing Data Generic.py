@@ -3,7 +3,12 @@ import os
 import time
 import numpy as np
 from pylab import plot, xlabel, ylabel, show, title, imshow, colorbar, savefig, close, pcolor, gca, axis, xlim, ylim
-
+"""
+This code is meant to load in data from various folders that contain .mat files with the data stored as arrays at a 
+specific dictionary key. This code also creates a nested directory to easily store and organize the graphs produced by 
+said data for the user. The only specifications that need to be changed between users is where the data is initially 
+stored and where they wish to save their files to. 
+"""
 
 class organizingFolders():
     def __init__(self, directory_to_save_to):

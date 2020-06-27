@@ -37,10 +37,10 @@ class MakeDataPlots():
         self.dim1 = dim1
         self.dim2 = dim2
 
-    def get_data_and_plot(self):
+    def get_data(self):
         """
-        This function creates a 3-D array that stores the given data files at any one given time step. This function
-        also calls various functions to preform further calculations as well as plot.
+        This function creates a 3-D array, called data, that stores the given data files at any one given time step.
+        :return: data
         """
         # initialize a 3-D array, to the size of the data stored in each file
         # The first dimension corresponds to the file, the second and third dimensions correspond to the first and
@@ -49,69 +49,84 @@ class MakeDataPlots():
 
         # Get the correct address to the folder.
         dir = folder_dir + folder
+        # print(folder)
         print(dir)
         # Counter for taking care of what file we are working with
         counter = 0
 
+        # A different file naming system was used for the d10 folder, this if statement takes care of the exception.
+        if 'd10-gf4' in folder:
+            file_list[14] = 'Pperp1-e'
+            file_list[15] = 'Pperp2-e'
+            file_list[16] = 'Ppar-e'
+            print(file_list)
+            self.fill_data(counter, data, dir, file_list)
+        else:
+            self.fill_data(counter, data, dir, file_list)
+        return data
 
+    def fill_data(self, counter, data, dir, file_list):
+        """
+        This function fills the 3-D array with the data from the files.
+        :param counter: Current place in file_list
+        :param data: A empty 3-D array
+        :param dir: User directory
+        :param file_list: List of the file names.
+        """
         # Loop for finding the files.
         for item in file_list:
             current_dir = dir + '/' + item + '_' + str(time_step) + '.mat'
+            print(counter)
             # A list of the dictionary key names for the data files P1, P2, and Pp. The data for these files are
             # stored in a different manner than the others.
             p_list = ['Pperp1e', 'Pperp2e', 'Ppare']
             # Check if the file exists, if it does store the data at that file to to the data 3-D array.
+            # print(current_dir)
             if os.path.isfile(current_dir):
-                # For P1.
+                # print(current_dir)
                 if counter == 14:
                     raw_data = scipy.io.loadmat(current_dir)
+                    # print("PPERP1E")
+                    # Store the data from mat lab
                     data[counter, :, :] = raw_data[p_list[0]]
-                # For P2.
                 elif counter == 15:
                     raw_data = scipy.io.loadmat(current_dir)
+                    # print("PPERP2E")
                     data[counter, :, :] = raw_data[p_list[1]]
-                # For Pp.
                 elif counter == 16:
                     raw_data = scipy.io.loadmat(current_dir)
+                    # print("PPARE")
                     data[counter, :, :] = raw_data[p_list[2]]
-                # For all other cases
                 else:
                     raw_data = scipy.io.loadmat(current_dir)
                     data[counter, :, :] = raw_data[item]
-                # Plot each file at the 60 time step
-                # if time_step == 60:
-                #     self.plot_others(data[counter, :, :], folder, time_step, 'Collection I/', item, data)
             counter = counter + 1
-        # After all of the data is stored, check the current time step, if at 60 find and plot temperature and p average
-        if time_step == 60:
-            self.time60(data, folder, time_step)
-        self.get_norms(data, folder, time_step)
-        # self.time60(data, folder, time_step)
 
-    def time60(self, data, folder, time_step):
+    def get_temp_and_kinetic(self, data, folder, time_step):
         """
-
+        This function performs the calculations on the data to find and plot both temperature and kinetic energy.
         :param data: 3-D array that holds the data points, sorted by file.
         :param folder: current folder being used, contains .mat files.
         :param time_step: current time step.
         """
         temperature = (data[14] + data[15] + data[16]) / (data[12] * 3)
-        tperp = (data[14] + data[15]) / (2 * data[12])
-        tpara = data[16] / data[12]
         kineticx = data[9] ** 2 / data[12]
         kineticy = data[10] ** 2 / data[12]
         kineticz = data[11] ** 2 / data[12]
         kineticTot = kineticx + kineticy + kineticz
 
+        # Plot kineticTot and temperature
         self.plot_others(kineticTot, folder, time_step, 'INSERT FOLDER HERE/', "kinetic", data)
         self.plot_others(temperature, folder, time_step, 'INSERT FOLDER HERE/', "temperature ", data)
-        self.plot_others(tperp, folder, time_step, 'INSERT FOLDER HERE/', "tperp ", data)
-        self.plot_others(tpara, folder, time_step, 'INSERT FOLDER HERE/', "tpara ", data)
+
+        # tperp = (data[14] + data[15]) / (2 * data[12])
+        # tpara = data[16] / data[12]
+        # self.plot_others(tperp, folder, time_step, 'INSERT FOLDER HERE/', "tperp ", data)
+        # self.plot_others(tpara, folder, time_step, 'INSERT FOLDER HERE/', "tpara ", data)
 
     def get_norms(self, data, folder, time_step):
         """
-        This function performs calculations on the data to find znormz, onormz, znormo, onormo, as well as calls
-        plot_norm.
+        This function performs calculations on the data to find and plot znormz, onormz, znormo, onormo.
         :param data: 3-D array that holds the data points, sorted by file.
         :param folder: current folder being used, contains .mat files.
         :param time_step: current time step.
@@ -217,8 +232,8 @@ class MakeDataPlots():
         title(plot_data_str + folder + '_' + str(time_step))
         colorbar()
         print('/media/sophianowak/My Passport/' + where_to_save + plot_data_str + folder + '_' + str(time_step))
-        savefig('/media/sophianowak/My Passport/' + where_to_save + plot_data_str + folder + '_' + str(time_step) + '.png')
-        close()
+        # savefig('/media/sophianowak/My Passport/' + where_to_save + plot_data_str + folder + '_' + str(time_step) + '.png')
+        # close()
         # show()
 
     def plot_others(self, plot_data, folder, time_step, where_to_save, plot_data_str, data):
@@ -238,8 +253,8 @@ class MakeDataPlots():
         title(plot_data_str + folder + '_' + str(time_step))
         colorbar()
         print('/media/sophianowak/My Passport/' + where_to_save + plot_data_str + folder + '_' + str(time_step))
-        savefig('/media/sophianowak/My Passport/' + where_to_save + plot_data_str + folder + '_' + str(time_step) + '.png')
-        close()
+        # savefig('/media/sophianowak/My Passport/' + where_to_save + plot_data_str + folder + '_' + str(time_step) + '.png')
+        # close()
         # show()
 
 
@@ -254,19 +269,22 @@ if __name__ == '__main__':
     folder_prefix_list = ['d10', 'd10.5', 'd11', 'd12', 'd14', 'd16', 'd20', 'd27', 'd74', 'd200']
 
     # Call the getFolderList class to create the list of the folders
-    folders = getFolderList(folder_dir, folder_prefix_list)
-    folder_list = folders.get_folders()
-    print(folder_list)
+    # folders = getFolderList(folder_dir, folder_prefix_list)
+    # folder_list = folders.get_folders()
+    # print(folder_list)
+    folder_list = ['d10-gf0', 'd10-gf2', 'd10-gf4']
 
     # Dimensions of the data in each file.
     dim1 = 1680
     dim2 = 3360
     # Loop over all of the folders
     for folder in folder_list:
-        for time_step in range(70, 71):
+        for time_step in range(60, 61):
             graphs = MakeDataPlots(folder_dir, file_list, folder_list, time_step, dim1, dim2)
-            graphs.get_data_and_plot()
+            data = graphs.get_data()
+
             del graphs
 
     end = time.time()
-    print(end - start + "seconds")
+    print(end - start)
+    print("seconds")

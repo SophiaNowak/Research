@@ -15,7 +15,6 @@ class MakeDataPlots():
         self.dim2 = dim2
 
     def get_data(self):
-
         # initialize a 3-D array, to the size of the data stored in each file
         # print(self.folder_dir, self.file_list, self.folder_list, self.time_step, self.dim1, self.dim2)
         data = np.zeros((len(file_list), dim1, dim2))
@@ -35,12 +34,13 @@ class MakeDataPlots():
             if os.path.isfile(current_dir):
                 if counter == 14:
                     raw_data = scipy.io.loadmat(current_dir)
-                    print("FUCK HELLO?")
+                    print("PPERP1E")
                     # print(type(rawData[item]))
                     # Store the data from mat lab
                     data[counter, :, :] = raw_data[pList[0]]
                 elif counter == 15:
                     raw_data = scipy.io.loadmat(current_dir)
+                    print("PPERP2E")
                     # print(type(rawData[item]))
                     # Store the data from mat lab
                     data[counter, :, :] = raw_data[pList[1]]
@@ -48,6 +48,7 @@ class MakeDataPlots():
                     raw_data = scipy.io.loadmat(current_dir)
                     # print(type(rawData[item]))
                     # Store the data from mat lab
+                    print("PPARE")
                     data[counter, :, :] = raw_data[pList[2]]
                 else:
                     raw_data = scipy.io.loadmat(current_dir)
@@ -58,7 +59,13 @@ class MakeDataPlots():
             counter = counter + 1
 
         temperature = (data[14] + data[15] + data[16]) / (data[12] * 3)
-        self.plot(temperature, folder, time_step, "temperature", data)
+        tperp = (data[14] + data[15]) / (2 * data[12])
+        tpara = data[16] / data[12]
+
+        self.plot(temperature, folder, time_step, "temperature ", data)
+        self.plot(tperp, folder, time_step, 'tperp ', data)
+        self.plot(tpara, folder, time_step, 'tpara ', data)
+
         # self.plot(data[14], folder, time_step, " ", data)
         # self.plot(data[15], folder, time_step, " ", data)
         # self.plot(data[16], folder, time_step, " ", data)
@@ -106,8 +113,8 @@ class MakeDataPlots():
                      origin = 'lower')
         title(plot_data_str + folder + '_' + str(time_step))
         colorbar()
-        print('/media/sophianowak/My Passport/INSERT LOCATION HERE/' + plot_data_str + folder + '_' + str(time_step))
-        # savefig('/media/sophianowak/My Passport/Python Graphs 4/' + plot_data_str + folder + '_' + str(time_step) + '.png')
+        print('/media/sophianowak/My Passport/Collection II/' + plot_data_str + folder + '_' + str(time_step))
+        # savefig('/media/sophianowak/My Passport/Collection II/temperature/' + plot_data_str + folder + '_' + str(time_step) + '.png')
         # close()
         show()
 
@@ -116,7 +123,7 @@ if __name__ == '__main__':
     start = time.time()
     # Change the file directory variable depending on where the data is currently stored.
     folder_dir = '/media/sophianowak/My Passport/AsymmetricScan400/'
-    file_list = ['uix', 'uiy', 'uiz', 'bx', 'by', 'bz', 'ex', 'ey', 'ez', 'jx', 'jy', 'jz', 'ne', 'ni', 'P1', 'P2', 'Pp']
+    file_list = ['uix', 'uiy', 'uiz', 'bx', 'by', 'bz', 'ex', 'ey', 'ez', 'jx', 'jy', 'jz', 'ne', 'ni', 'Pperp1-e', 'Pperp2-e', 'Ppar-e']
     folder_list = ['d10-gf0', 'd10-gf4', 'd10-gf8', 'd27-gf0', 'd27-gf4', 'd27-gf8','d200-gf0', 'd200-gf4', 'd200-gf8'] #'d10-gf0', 'd10.5-gf0', 'd11-gf0', 'd12-gf0',
     # Dimensions of the  in each file.
     dim1 = 1680

@@ -54,13 +54,15 @@ class MakeDataPlots():
         # Counter for taking care of what file we are working with
         counter = 0
 
-        # A different file naming system was used for the d10 folder, this if statement takes care of the exception.
-        if 'd10-gf4' in folder:
-            file_list[14] = 'Pperp1-e'
-            file_list[15] = 'Pperp2-e'
-            file_list[16] = 'Ppar-e'
-            print(file_list)
+        # A different file naming system was used for the d10-gf4 folder, this if statement takes care of the exception.
+        if 'd10-gf4' is folder:
+            # print("Exception folder reached")
+            exception_list = file_list.copy()
+            exception_list[14] = 'Pperp1-e'
+            exception_list[15] = 'Pperp2-e'
+            exception_list[16] = 'Ppar-e'
             self.fill_data(counter, data, dir, file_list)
+        # Else fill normally.
         else:
             self.fill_data(counter, data, dir, file_list)
         return data
@@ -76,7 +78,6 @@ class MakeDataPlots():
         # Loop for finding the files.
         for item in file_list:
             current_dir = dir + '/' + item + '_' + str(time_step) + '.mat'
-            print(counter)
             # A list of the dictionary key names for the data files P1, P2, and Pp. The data for these files are
             # stored in a different manner than the others.
             p_list = ['Pperp1e', 'Pperp2e', 'Ppare']
@@ -87,7 +88,7 @@ class MakeDataPlots():
                 if counter == 14:
                     raw_data = scipy.io.loadmat(current_dir)
                     # print("PPERP1E")
-                    # Store the data from mat lab
+                    # Store the data from mat lab.
                     data[counter, :, :] = raw_data[p_list[0]]
                 elif counter == 15:
                     raw_data = scipy.io.loadmat(current_dir)
@@ -100,6 +101,7 @@ class MakeDataPlots():
                 else:
                     raw_data = scipy.io.loadmat(current_dir)
                     data[counter, :, :] = raw_data[item]
+            # Increase counter to move onto next file.
             counter = counter + 1
 
     def get_temp_and_kinetic(self, data, folder, time_step):
@@ -116,13 +118,13 @@ class MakeDataPlots():
         kineticTot = kineticx + kineticy + kineticz
 
         # Plot kineticTot and temperature
-        self.plot_others(kineticTot, folder, time_step, 'INSERT FOLDER HERE/', "kinetic", data)
-        self.plot_others(temperature, folder, time_step, 'INSERT FOLDER HERE/', "temperature ", data)
+        self.plot_temp_and_kinetic(kineticTot, folder, time_step, 'fuck/', "kinetic ", data)
+        self.plot_temp_and_kinetic(temperature, folder, time_step, 'fuck/', "temperature ", data)
 
         # tperp = (data[14] + data[15]) / (2 * data[12])
         # tpara = data[16] / data[12]
-        # self.plot_others(tperp, folder, time_step, 'INSERT FOLDER HERE/', "tperp ", data)
-        # self.plot_others(tpara, folder, time_step, 'INSERT FOLDER HERE/', "tpara ", data)
+        # self.plot_temp_and_kinetic(tperp, folder, time_step, 'fuck/', "tperp ", data)
+        # self.plot_temp_and_kinetic(tpara, folder, time_step, 'fuck/', "tpara ", data)
 
     def get_norms(self, data, folder, time_step):
         """
@@ -166,10 +168,10 @@ class MakeDataPlots():
         znormo = znormz * neg / nig
         onormo = onormz * neg / nig
 
-        self.plot_norm(znormz, folder, time_step, 'INSERT FOLDER HERE/', "znormz ", data)
-        self.plot_norm(onormz, folder, time_step, 'INSERT FOLDER HERE/', "onormz ", data)
-        self.plot_norm(znormo, folder, time_step, 'INSERT FOLDER HERE/', "znormo ", data)
-        self.plot_norm(onormo, folder, time_step, 'INSERT FOLDER HERE/', "onormo ", data)
+        self.plot_norm(znormz, folder, time_step, 'fuck/', "znormz ", data)
+        self.plot_norm(onormz, folder, time_step, 'fuck/', "onormz ", data)
+        self.plot_norm(znormo, folder, time_step, 'fuck/', "znormo ", data)
+        self.plot_norm(onormo, folder, time_step, 'fuck/', "onormo ", data)
 
     def contractT(self, data, nix, niy, niz):
         Sx = data[7] * data[5] - data[8] * data[4]
@@ -232,17 +234,17 @@ class MakeDataPlots():
         title(plot_data_str + folder + '_' + str(time_step))
         colorbar()
         print('/media/sophianowak/My Passport/' + where_to_save + plot_data_str + folder + '_' + str(time_step))
-        # savefig('/media/sophianowak/My Passport/' + where_to_save + plot_data_str + folder + '_' + str(time_step) + '.png')
-        # close()
+        savefig('/media/sophianowak/My Passport/' + where_to_save + plot_data_str + folder + '_' + str(time_step) + '.png')
+        close()
         # show()
 
-    def plot_others(self, plot_data, folder, time_step, where_to_save, plot_data_str, data):
+    def plot_temp_and_kinetic(self, plot_data, folder, time_step, where_to_save, plot_data_str, data):
         """
-        This function plots temperature, tperp, as well as each data file. It uses inferno.
+        This function plots temperature and kinetic energy, it can also be used to plot the individual files.
         :param plot_data: what data is to be plotted.
         :param folder: current folder being used, contains .mat files.
         :param time_step: current time step.
-        :param where_to_save: name of the folder that the graphs are to be saved to.
+        :param where_to_save: name of the folder that the graphs are to be saved to. User must choose.
         :param plot_data_str: string containing the name of the data that is being plotted.
         :param data: 3-D array that holds the data points, sorted by file.
         """
@@ -253,8 +255,8 @@ class MakeDataPlots():
         title(plot_data_str + folder + '_' + str(time_step))
         colorbar()
         print('/media/sophianowak/My Passport/' + where_to_save + plot_data_str + folder + '_' + str(time_step))
-        # savefig('/media/sophianowak/My Passport/' + where_to_save + plot_data_str + folder + '_' + str(time_step) + '.png')
-        # close()
+        savefig('/media/sophianowak/My Passport/' + where_to_save + plot_data_str + folder + '_' + str(time_step) + '.png')
+        close()
         # show()
 
 
@@ -269,9 +271,10 @@ if __name__ == '__main__':
     folder_prefix_list = ['d10', 'd10.5', 'd11', 'd12', 'd14', 'd16', 'd20', 'd27', 'd74', 'd200']
 
     # Call the getFolderList class to create the list of the folders
-    # folders = getFolderList(folder_dir, folder_prefix_list)
-    # folder_list = folders.get_folders()
-    # print(folder_list)
+    folders = getFolderList(folder_dir, folder_prefix_list)
+    folder_list = folders.get_folders()
+    print(folder_list)
+    # To test manually, choose specific files and enter them into the folder_list below.
     folder_list = ['d10-gf0', 'd10-gf2', 'd10-gf4']
 
     # Dimensions of the data in each file.
@@ -282,9 +285,12 @@ if __name__ == '__main__':
         for time_step in range(60, 61):
             graphs = MakeDataPlots(folder_dir, file_list, folder_list, time_step, dim1, dim2)
             data = graphs.get_data()
-
+            graphs.get_norms(data, folder, time_step)
+            if time_step == 60:
+                graphs.get_temp_and_kinetic(data, folder, time_step)
+            # Clear graphs for faster running.
             del graphs
 
     end = time.time()
-    print(end - start)
-    print("seconds")
+    print(end - start, "seconds taken to run")
+

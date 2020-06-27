@@ -5,6 +5,37 @@ import numpy as np
 from pylab import plot, xlabel, ylabel, show, title, imshow, colorbar, savefig, close, pcolor, gca, axis, xlim, ylim
 
 
+class organizingFolders():
+    def __init__(self, directory_to_save_to):
+        self.directory_to_save_to = directory_to_save_to
+
+    def create_folder(self):
+        """
+        This function creates a folder, with various other folders in it for better file organizing.
+        """
+        path = directory_to_save_to + 'Simulation Graphs'
+        if not os.path.exists(path):
+            os.makedirs(path)
+        path = directory_to_save_to + 'Simulation Graphs/kinetic'
+        if not os.path.exists(path):
+            os.makedirs(path)
+        path = directory_to_save_to + 'Simulation Graphs/temperature'
+        if not os.path.exists(path):
+            os.makedirs(path)
+        path = directory_to_save_to + 'Simulation Graphs/onormo'
+        if not os.path.exists(path):
+            os.makedirs(path)
+        path = directory_to_save_to + 'Simulation Graphs/onormz'
+        if not os.path.exists(path):
+            os.makedirs(path)
+        path = directory_to_save_to + 'Simulation Graphs/znormz'
+        if not os.path.exists(path):
+            os.makedirs(path)
+        path = directory_to_save_to + 'Simulation Graphs/znormo'
+        if not os.path.exists(path):
+            os.makedirs(path)
+
+
 class getFolderList():
     def __init__(self, folder_dir, folder_prefix_list):
         self.folder_dir = folder_dir
@@ -55,13 +86,13 @@ class MakeDataPlots():
         counter = 0
 
         # A different file naming system was used for the d10-gf4 folder, this if statement takes care of the exception.
-        if 'd10-gf4' is folder:
+        if 'd10-gf4' == folder:
             # print("Exception folder reached")
             exception_list = file_list.copy()
             exception_list[14] = 'Pperp1-e'
             exception_list[15] = 'Pperp2-e'
             exception_list[16] = 'Ppar-e'
-            self.fill_data(counter, data, dir, file_list)
+            self.fill_data(counter, data, dir, exception_list)
         # Else fill normally.
         else:
             self.fill_data(counter, data, dir, file_list)
@@ -118,8 +149,8 @@ class MakeDataPlots():
         kineticTot = kineticx + kineticy + kineticz
 
         # Plot kineticTot and temperature
-        self.plot_temp_and_kinetic(kineticTot, folder, time_step, 'fuck/', "kinetic ", data)
-        self.plot_temp_and_kinetic(temperature, folder, time_step, 'fuck/', "temperature ", data)
+        self.plot_temp_and_kinetic(kineticTot, folder, time_step, 'Simulation Graphs/kinetic/', "kinetic ", data)
+        self.plot_temp_and_kinetic(temperature, folder, time_step, 'Simulation Graphs/temperature/', "temperature ", data)
 
         # tperp = (data[14] + data[15]) / (2 * data[12])
         # tpara = data[16] / data[12]
@@ -168,10 +199,10 @@ class MakeDataPlots():
         znormo = znormz * neg / nig
         onormo = onormz * neg / nig
 
-        self.plot_norm(znormz, folder, time_step, 'fuck/', "znormz ", data)
-        self.plot_norm(onormz, folder, time_step, 'fuck/', "onormz ", data)
-        self.plot_norm(znormo, folder, time_step, 'fuck/', "znormo ", data)
-        self.plot_norm(onormo, folder, time_step, 'fuck/', "onormo ", data)
+        self.plot_norm(znormz, folder, time_step, 'Simulation Graphs/znormz/', "znormz ", data)
+        self.plot_norm(onormz, folder, time_step, 'Simulation Graphs/onormz/', "onormz ", data)
+        self.plot_norm(znormo, folder, time_step, 'Simulation Graphs/znormo/', "znormo ", data)
+        self.plot_norm(onormo, folder, time_step, 'Simulation Graphs/onormo/', "onormo ", data)
 
     def contractT(self, data, nix, niy, niz):
         Sx = data[7] * data[5] - data[8] * data[4]
@@ -262,6 +293,12 @@ class MakeDataPlots():
 
 if __name__ == '__main__':
     start = time.time()
+    # Enter the directory you wish to save your graphs to.
+    directory_to_save_to = '/media/sophianowak/My Passport/'
+    # Call organizingFolders to create new folders to be used later.
+    folderNew = organizingFolders(directory_to_save_to)
+    folderNew.create_folder()
+
     # Change the file directory variable depending on where the data is currently stored.
     folder_dir = '/media/sophianowak/My Passport/AsymmetricScan400/'
     # List of the file names, though these names may not necessarily correspond to the correct dictionary key where
@@ -271,11 +308,11 @@ if __name__ == '__main__':
     folder_prefix_list = ['d10', 'd10.5', 'd11', 'd12', 'd14', 'd16', 'd20', 'd27', 'd74', 'd200']
 
     # Call the getFolderList class to create the list of the folders
-    folders = getFolderList(folder_dir, folder_prefix_list)
-    folder_list = folders.get_folders()
-    print(folder_list)
+    # folders = getFolderList(folder_dir, folder_prefix_list)
+    # folder_list = folders.get_folders()
+    # print(folder_list)
     # To test manually, choose specific files and enter them into the folder_list below.
-    folder_list = ['d10-gf0', 'd10-gf2', 'd10-gf4']
+    folder_list = ['d10-gf0', 'd10-gf4', 'd10-gf8', 'd27-gf0', 'd27-gf4', 'd27-gf8', 'd200-gf0', 'd200-gf4', 'd200-gf8']
 
     # Dimensions of the data in each file.
     dim1 = 1680
@@ -288,8 +325,10 @@ if __name__ == '__main__':
             graphs.get_norms(data, folder, time_step)
             if time_step == 60:
                 graphs.get_temp_and_kinetic(data, folder, time_step)
-            # Clear graphs for faster running.
+            # Delete the class instance, graphs, for faster running.
             del graphs
+
+
 
     end = time.time()
     print(end - start, "seconds taken to run")

@@ -109,8 +109,7 @@ class MakeDataPlots():
         # print(np.min(plot_data))
         # print(np.max(plot_data))
 
-        fig = imshow(plot_data, cmap = "inferno", extent = [(xpos-200),(xpos+200), (zpos-150), (zpos+150)],
-                     origin = 'lower')
+        fig = imshow(plot_data, cmap = "inferno", extent = [(xpos-200),(xpos+200), (zpos-150), (zpos+150)])
         title(plot_data_str + folder + '_' + str(time_step))
         colorbar()
         print('/media/sophianowak/My Passport/Collection II/' + plot_data_str + folder + '_' + str(time_step))
@@ -124,7 +123,7 @@ if __name__ == '__main__':
     # Change the file directory variable depending on where the data is currently stored.
     folder_dir = '/media/sophianowak/My Passport/AsymmetricScan400/'
     file_list = ['uix', 'uiy', 'uiz', 'bx', 'by', 'bz', 'ex', 'ey', 'ez', 'jx', 'jy', 'jz', 'ne', 'ni', 'Pperp1-e', 'Pperp2-e', 'Ppar-e']
-    folder_list = ['d10-gf0', 'd10-gf4', 'd10-gf8', 'd27-gf0', 'd27-gf4', 'd27-gf8','d200-gf0', 'd200-gf4', 'd200-gf8'] #'d10-gf0', 'd10.5-gf0', 'd11-gf0', 'd12-gf0',
+    folder_list = ['d10-gf0', 'd10-gf4', 'd10-gf8', 'd27-gf0', 'd27-gf4', 'd27-gf8','d200-gf0', 'd200-gf4', 'd200-gf8', 'd14-gf2'] #'d10-gf0', 'd10.5-gf0', 'd11-gf0', 'd12-gf0',
     # Dimensions of the  in each file.
     dim1 = 1680
     dim2 = 3360

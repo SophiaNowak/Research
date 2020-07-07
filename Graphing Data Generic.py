@@ -18,25 +18,25 @@ class organizingFolders():
         """
         This function creates a folder, with various other folders in it for better file organizing.
         """
-        path = directory_to_save_to + 'Simulation Graphs'
+        path = directory_to_save_to + 'Python Graphs'
         if not os.path.exists(path):
             os.makedirs(path)
-        path = directory_to_save_to + 'Simulation Graphs/kinetic'
+        path = directory_to_save_to + 'Python Graphs/kinetic'
         if not os.path.exists(path):
             os.makedirs(path)
-        path = directory_to_save_to + 'Simulation Graphs/temperature'
+        path = directory_to_save_to + 'Python Graphs/temperature'
         if not os.path.exists(path):
             os.makedirs(path)
-        path = directory_to_save_to + 'Simulation Graphs/onormo'
+        path = directory_to_save_to + 'Python Graphs/onormo'
         if not os.path.exists(path):
             os.makedirs(path)
-        path = directory_to_save_to + 'Simulation Graphs/onormz'
+        path = directory_to_save_to + 'Python Graphs/onormz'
         if not os.path.exists(path):
             os.makedirs(path)
-        path = directory_to_save_to + 'Simulation Graphs/znormz'
+        path = directory_to_save_to + 'Python Graphs/znormz'
         if not os.path.exists(path):
             os.makedirs(path)
-        path = directory_to_save_to + 'Simulation Graphs/znormo'
+        path = directory_to_save_to + 'Python Graphs/znormo'
         if not os.path.exists(path):
             os.makedirs(path)
 
@@ -154,8 +154,8 @@ class MakeDataPlots():
         kineticTot = kineticx + kineticy + kineticz
 
         # Plot kineticTot and temperature
-        self.plot_temp_and_kinetic(kineticTot, folder, time_step, 'Simulation Graphs/kinetic/', "kinetic ", data)
-        self.plot_temp_and_kinetic(temperature, folder, time_step, 'Simulation Graphs/temperature/', "temperature ", data)
+        self.plot_temp_and_kinetic(kineticTot, folder, time_step, 'Python Graphs/kinetic/', "kinetic ", data)
+        self.plot_temp_and_kinetic(temperature, folder, time_step, 'Python Graphs/temperature/', "temperature ", data)
 
         # tperp = (data[14] + data[15]) / (2 * data[12])
         # tpara = data[16] / data[12]
@@ -204,10 +204,10 @@ class MakeDataPlots():
         znormo = znormz * neg / nig
         onormo = onormz * neg / nig
 
-        self.plot_norm(znormz, folder, time_step, 'Simulation Graphs/znormz/', "znormz ", data)
-        self.plot_norm(onormz, folder, time_step, 'Simulation Graphs/onormz/', "onormz ", data)
-        self.plot_norm(znormo, folder, time_step, 'Simulation Graphs/znormo/', "znormo ", data)
-        self.plot_norm(onormo, folder, time_step, 'Simulation Graphs/onormo/', "onormo ", data)
+        self.plot_norm(znormz, folder, time_step, 'Python Graphs/znormz/', "znormz ", data)
+        self.plot_norm(onormz, folder, time_step, 'Python Graphs/onormz/', "onormz ", data)
+        self.plot_norm(znormo, folder, time_step, 'Python Graphs/znormo/', "znormo ", data)
+        self.plot_norm(onormo, folder, time_step, 'Python Graphs/onormo/', "onormo ", data)
 
     def contractT(self, data, nix, niy, niz):
         Sx = data[7] * data[5] - data[8] * data[4]
@@ -309,9 +309,10 @@ if __name__ == '__main__':
     # List of the file names, though these names may not necessarily correspond to the correct dictionary key where
     # the data is located.
     file_list = ['uix', 'uiy', 'uiz', 'bx', 'by', 'bz', 'ex', 'ey', 'ez', 'jx', 'jy', 'jz', 'ne', 'ni', 'P1', 'P2', 'Pp']
-    # Store the folder prefixes to later loop through storing all of the folders.
-    folder_prefix_list = ['d10', 'd10.5', 'd11', 'd12', 'd14', 'd16', 'd20', 'd27', 'd74', 'd200']
 
+    # If the user wishes to use the entire folder set use the below code.
+    # Store the folder prefixes to later loop through storing all of the folders.
+    # folder_prefix_list = ['d10', 'd10.5', 'd11', 'd12', 'd14', 'd16', 'd20', 'd27', 'd74', 'd200']
     # Call the getFolderList class to create the list of the folders
     # folders = getFolderList(folder_dir, folder_prefix_list)
     # folder_list = folders.get_folders()
@@ -332,8 +333,6 @@ if __name__ == '__main__':
                 graphs.get_temp_and_kinetic(data, folder, time_step)
             # Delete the class instance, graphs, for faster running.
             del graphs
-
-
 
     end = time.time()
     print(end - start, "seconds taken to run")

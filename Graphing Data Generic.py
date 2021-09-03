@@ -41,27 +41,27 @@ class organizingFolders():
             os.makedirs(path)
 
 
-class getFolderList():
-    def __init__(self, folder_dir, folder_prefix_list):
-        self.folder_dir = folder_dir
-        self.folder_prefix_list = folder_prefix_list
-
-    def get_folders(self):
-        """
-        This function stores the names of the folders where the .mat data files are located.
-        :return: folder list.
-        """
-        # Using the folder prefixes loop through the given directory where the folders are stored
-        # appending them to the folder list.
-        # Initialize a empty list.
-        folder_list = []
-        for folder in os.listdir(folder_dir):
-            for dnum in folder_prefix_list:
-                for gfnum in range(0, 12, 2):
-                    folder_name = str(dnum) + '-gf' + str(gfnum)
-                    if folder_name in folder:
-                        folder_list.append(folder)
-        return folder_list
+# class getFolderList():
+#     def __init__(self, folder_dir, folder_prefix_list):
+#         self.folder_dir = folder_dir
+#         self.folder_prefix_list = folder_prefix_list
+#
+#     def get_folders(self):
+#         """
+#         This function stores the names of the folders where the .mat data files are located.
+#         :return: folder list.
+#         """
+#         # Using the folder prefixes loop through the given directory where the folders are stored
+#         # appending them to the folder list.
+#         # Initialize a empty list.
+#         folder_list = []
+#         for folder in os.listdir(folder_dir):
+#             for dnum in folder_prefix_list:
+#                 for gfnum in range(0, 12, 2):
+#                     folder_name = str(dnum) + '-gf' + str(gfnum)
+#                     if folder_name in folder:
+#                         folder_list.append(folder)
+#         return folder_list
 
 
 class MakeDataPlots():
@@ -225,6 +225,7 @@ class MakeDataPlots():
         sqrtW = np.sqrt(T00 ** 2 - Sx ** 2 - Sy ** 2 - Sz ** 2)
         return T0, T1, T2, T3, sqrtW
 
+
     def find_center(self, data):
         """
         This function finds the center of the graph, where the magnetic reconnection occurs.
@@ -267,7 +268,8 @@ class MakeDataPlots():
             ylim(650, 950)
 
         fig = imshow(plot_data, cmap="bwr", clim=(-val, val))
-        title(plot_data_str + folder + '_' + str(time_step))
+        # title(plot_data_str + folder + '_' + str(time_step))
+        title(plot_data_str)
         colorbar()
         print('/media/sophianowak/My Passport/' + where_to_save + plot_data_str + folder + '_' + str(time_step))
         savefig('/media/sophianowak/My Passport/' + where_to_save + plot_data_str + folder + '_' + str(time_step) + '.png')
@@ -288,7 +290,8 @@ class MakeDataPlots():
         plot_data = plot_data[(zpos-150):(zpos+150), (xpos-200):(xpos+200)]
         fig = imshow(plot_data, cmap="inferno", extent=[(xpos - 200), (xpos + 200), (zpos - 150), (zpos + 150)],
                      origin='lower')
-        title(plot_data_str + folder + '_' + str(time_step))
+        # title(plot_data_str + folder + '_' + str(time_step))
+        title(plot_data_str)
         colorbar()
         print('/media/sophianowak/My Passport/' + where_to_save + plot_data_str + folder + '_' + str(time_step))
         savefig('/media/sophianowak/My Passport/' + where_to_save + plot_data_str + folder + '_' + str(time_step) + '.png')

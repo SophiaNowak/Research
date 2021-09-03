@@ -12,6 +12,7 @@ class getFolderList():
 
     def get_folders(self):
         """
+        Update:
         This function stores the names of the folders where the .mat data files are located.
         :return: folder list.
         """
